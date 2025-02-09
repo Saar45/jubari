@@ -1,0 +1,7 @@
+{
+  "name": "jubari",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
