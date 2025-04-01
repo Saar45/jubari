@@ -1,0 +1,67 @@
+:host {
+  ion-content {
+    --background: var(--ion-color-light);
+  }
+
+  ion-list {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 24px;
+  }
+
+  ion-item {
+    --background: var(--ion-color-light);
+    --border-color: var(--ion-color-medium);
+    margin-bottom: 16px;
+    --border-radius: 8px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  ion-textarea {
+    --background: var(--ion-color-light);
+  }
+
+  ion-button {
+    margin-top: 24px;
+  }
+}
+
+.date-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+
+  ion-item {
+    --inner-padding-end: 0;
+    
+    ion-icon {
+      color: var(--ion-color-medium);
+      margin-right: 8px;
+    }
+
+    ion-datetime-button::part(native) {
+      --background: transparent;
+      padding-inline: 8;
+    }
+
+    ion-datetime-button::part(button) {
+      --background: transparent;
+      padding: 5px;
+    }
+  }
+}
+
+.button-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 24px;
+
+  ion-button {
+    margin-top: 0;
+  }
+}

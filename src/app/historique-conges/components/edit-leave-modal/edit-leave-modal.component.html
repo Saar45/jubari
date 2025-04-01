@@ -1,0 +1,90 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Modifier la demande</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="editForm" (ngSubmit)="submitEdit()">
+    <ion-list>
+      <ion-radio-group formControlName="type">
+        <ion-list-header>
+          <ion-label>Type de congé</ion-label>
+        </ion-list-header>
+        <ion-item>
+          <ion-label>Congé payé</ion-label>
+          <ion-radio slot="end" value="1"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>Congé non payé</ion-label>
+          <ion-radio slot="end" value="0"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+
+      <div class="date-grid">
+        <ion-item>
+          <ion-label>Début</ion-label>
+          <ion-datetime-button slot="end" datetime="startDate"></ion-datetime-button>
+        </ion-item>
+        <ion-item>
+          <ion-label>Fin</ion-label>
+          <ion-datetime-button slot="end" datetime="endDate"></ion-datetime-button>
+        </ion-item>
+      </div>
+
+      <ion-item>
+        <ion-label position="stacked">Motif</ion-label>
+        <ion-textarea formControlName="reason" rows="3"></ion-textarea>
+      </ion-item>
+    </ion-list>
+
+    <div class="button-group">
+      <ion-button expand="block" type="submit" [disabled]="!editForm.valid">
+        Enregistrer les modifications
+      </ion-button>
+      <ion-button expand="block" fill="outline" (click)="dismiss()">
+        Annuler
+      </ion-button>
+    </div>
+  </form>
+</ion-content>
+
+<!-- Date Modals -->
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime 
+      id="startDate" 
+      [formControl]="startDateControl"
+      [min]="minDate" 
+      [max]="maxDate" 
+      [isDateEnabled]="isDateEnabled"
+      presentation="date"
+      locale="fr-FR"
+      firstDayOfWeek="1"
+      monthShort="true"
+      color="primary">
+    </ion-datetime>
+  </ng-template>
+</ion-modal>
+
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime 
+      id="endDate" 
+      [formControl]="endDateControl"
+      [min]="editForm.get('startDate')?.value"
+      [max]="maxDate" 
+      [isDateEnabled]="isDateEnabled"
+      presentation="date"
+      locale="fr-FR"
+      firstDayOfWeek="1"
+      monthShort="true"
+      color="primary">
+    </ion-datetime>
+  </ng-template>
+</ion-modal>
