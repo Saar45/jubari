@@ -1,0 +1,52 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>Jubari Consortium</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content>
+  <div class="login-wrapper">
+    <div class="brand-side">
+      <h1 class="brand-title">Jubari Consortium</h1>
+      <img src="../../assets/jubari.png" alt="Logo" class="logo">
+    </div>
+    
+    <div class="login-container">
+      <h1>Bienvenue</h1>
+      <p class="subtitle">Veuillez vous connecter pour continuer</p>
+      
+      <form class="login-form">
+        <div class="input-group">
+          <ion-item lines="none">
+            <ion-label position="floating">Adresse e-mail</ion-label>
+            <ion-input [(ngModel)]="email" name="email" type="email" required></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-group">
+          <ion-item lines="none">
+            <ion-label position="floating">Mot de passe</ion-label>
+            <ion-input [(ngModel)]="password" name="password" [type]="passwordType" required></ion-input>
+            <ion-icon [name]="passwordType === 'password' ? 'eye-outline' : 'eye-off-outline'"
+                      (click)="togglePasswordVisibility()" 
+                      class="password-toggle">
+            </ion-icon>
+          </ion-item>
+        </div>
+
+        <ion-button expand="block" 
+                    class="login-button" 
+                    (click)="login()">
+          Se connecter
+        </ion-button>
+
+        <div class="register-prompt">
+          <span>Votre première visite ici ?</span>
+          <ion-button fill="clear" class="register-link" (click)="openRegisterModal()">
+            S'inscrire
+          </ion-button>
+        </div>
+      </form>
+    </div>
+  </div>
+</ion-content>

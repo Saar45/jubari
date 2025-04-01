@@ -1,0 +1,206 @@
+ion-content {
+  --background: var(--jubari-white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.login-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.brand-side {
+  background: var(--jubari-dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: var(--jubari-white);
+
+  .brand-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .logo {
+    width: 200px;
+    height: auto;
+    margin-bottom: 2rem;
+  }
+}
+
+.logo-container {
+  text-align: center;
+  margin-bottom: 2rem;
+  margin-top: 15px;
+}
+
+.logo-container img {
+  width: 150px;
+  height: auto;
+}
+
+.logo-container .logo {
+  width: 120px;
+  height: auto;
+}
+
+.login-container {
+  background: var(--jubari-white);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  animation: fadeIn 0.5s ease-out;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+
+  h1 {
+    color: var(--jubari-dark);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .subtitle {
+    color: var(--jubari-primary);
+    margin-bottom: 2rem;
+  }
+}
+
+h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+.subtitle {
+  color: #666;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 14px;
+}
+
+.login-form {
+  .input-group {
+    margin-bottom: 1.5rem;
+
+    ion-item {
+      --background: var(--jubari-white);
+      --border-color: var(--jubari-light);
+      --border-radius: 8px;
+      --border-width: 1px;
+      --border-style: solid;
+      margin-bottom: 1rem;
+      
+      &::part(native) {
+        border: 1px solid var(--jubari-light);
+        padding: 8px 0;
+      }
+    }
+
+    ion-label {
+      --color: var(--jubari-dark);
+    }
+  }
+
+  ion-item {
+    --background: #f8f9fa;
+    --border-radius: 8px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    margin-bottom: 1rem;
+    
+    &::part(native) {
+      padding: 8px 0;
+    }
+  }
+
+  ion-label {
+    --color: #666;
+  }
+
+  ion-input {
+    --padding-start: 8px;
+    font-size: 16px;
+  }
+}
+
+.password-toggle {
+  font-size: 1.2rem;
+  color: #666;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.login-button {
+  --background: var(--jubari-primary);
+  --color: var(--jubari-white);
+  --border-radius: 8px;
+  --box-shadow: none;
+  margin-top: 1rem;
+  height: 48px;
+  font-weight: 500;
+  font-size: 16px;
+  
+  &:hover {
+    --background: var(--jubari-dark);
+  }
+}
+
+.register-prompt {
+  margin-top: 1.5rem;
+  text-align: center;
+  
+  span {
+    color: var(--jubari-dark);
+    font-size: 14px;
+  }
+
+  .register-link {
+    --color: var(--jubari-primary);
+    font-weight: 500;
+    text-transform: none;
+    font-size: 14px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .login-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-side {
+    display: none;
+  }
+}
