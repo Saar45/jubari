@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Liste des Employés</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="addEmployee()">
+        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="employee-list">
+    <div class="search-bar">
+      <ion-searchbar placeholder="Rechercher un employé"></ion-searchbar>
+    </div>
+
+    <div class="employee-grid">
+      <ion-card *ngFor="let employee of employees">
+        <ion-card-content>
+          <div class="employee-header">
+            <ion-avatar>
+              <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+            </ion-avatar>
+            <div class="employee-info">
+              <div class="name-badge">
+                <h2>{{employee.prenom}} {{employee.nom}}</h2>
+                <ion-icon *ngIf="employee.serviceDirige" 
+                         name="shield-checkmark" 
+                         class="manager-badge" 
+                         title="Chef de service"></ion-icon>
+              </div>
+              <p>{{employee.email}}</p>
+            </div>
+          </div>
+          
+          <div class="employee-details">
+            <p><strong>Rôle:</strong> {{employee.role}}</p>
+            <p><strong>Service:</strong> {{employee.service?.nom || 'Non assigné'}}</p>
+            <!-- <p *ngIf="employee.serviceDirige"><strong>Service Dirigé:</strong> {{employee.serviceDirige.nom}}</p> -->
+          </div>
+
+          <div class="action-buttons">
+            <ion-button fill="clear" (click)="modifyEmployee(employee)">
+              <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" color="danger" (click)="deleteEmployee(employee)">
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

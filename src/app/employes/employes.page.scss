@@ -1,0 +1,102 @@
+.employee-list {
+  padding: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.search-bar {
+  margin-bottom: 16px;
+  
+  ion-searchbar {
+    --background: #ffffff;
+    --box-shadow: none;
+    --border-radius: 8px;
+  }
+}
+
+ion-content {
+    --background: #f5f7fa;
+  }
+
+.employee-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+ion-card {
+  margin: 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  border-radius: 12px;
+  
+  &:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s;
+  }
+}
+
+.employee-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  
+  ion-avatar {
+    width: 48px;
+    height: 48px;
+    margin-right: 12px;
+  }
+  
+  .employee-info {
+    h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    
+    .name-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .manager-badge {
+        color: #3880ff;
+        font-size: 18px;
+      }
+    }
+
+    p {
+      margin: 4px 0 0;
+      font-size: 14px;
+      color: #666;
+    }
+  }
+}
+
+.employee-details {
+  p {
+    margin: 8px 0;
+    font-size: 14px;
+    color: #2c3e50;
+    
+    strong {
+      color: #666;
+    }
+  }
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+  
+  ion-button {
+    margin-left: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .employee-grid {
+    grid-template-columns: 1fr;
+  }
+}
