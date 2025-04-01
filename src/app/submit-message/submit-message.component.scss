@@ -1,0 +1,31 @@
+.form-content {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 16px;
+
+  ion-item {
+    --background: #f8f9fa;
+    --border-radius: 8px;
+    margin-bottom: 16px;
+    
+    ion-label {
+      color: #2c3e50;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    ion-input, ion-textarea {
+      --background: #f8f9fa;
+      --padding-start: 16px;
+      --padding-end: 16px;
+      margin-top: 8px;
+    }
+  }
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 24px;
+}

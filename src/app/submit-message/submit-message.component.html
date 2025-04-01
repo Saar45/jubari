@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Soumettre une alerte</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="messageForm" (ngSubmit)="submit()">
+    <div class="form-content">
+
+      <ion-item>
+        <ion-label position="stacked">Description</ion-label>
+        <ion-textarea
+          formControlName="description"
+          placeholder="Décrivez votre message"
+          [counter]="true"
+          [maxlength]="250"
+          [rows]="6">
+        </ion-textarea>
+      </ion-item>
+
+      <div class="button-group">
+        <ion-button fill="clear" (click)="cancel()">
+          Annuler
+        </ion-button>
+        <ion-button 
+          type="submit"
+          [disabled]="!messageForm.valid">
+          Envoyer
+        </ion-button>
+      </div>
+    </div>
+  </form>
+</ion-content>
