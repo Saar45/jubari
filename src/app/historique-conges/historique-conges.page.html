@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Historique des congés</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="leave-history">
+    <div class="search-bar">
+      <ion-searchbar placeholder="Rechercher un congé"></ion-searchbar>
+      <ion-segment [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)">
+        <ion-segment-button value="all">
+          <ion-label>Tous</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="approved" [disabled]="!hasRequestsWithStatus('approved')">
+          <ion-label>Approuvés</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="waiting" [disabled]="!hasRequestsWithStatus('waiting')">
+          <ion-label>En attente</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <div class="leave-grid">
+      <ion-card *ngFor="let leave of filteredRequests">
+        <ion-card-content>
+          <div class="leave-header">
+            <div class="leave-type">
+              <h2>{{leave.type}}</h2>
+              <ion-badge [color]="getStatusColor(leave.status)">
+                {{getStatusLabel(leave.status)}}
+              </ion-badge>
+            </div>
+            <div class="leave-duration">
+              <ion-chip>
+                <ion-icon name="time-outline"></ion-icon>
+                <ion-label>{{leave.duration}} jours</ion-label>
+              </ion-chip>
+            </div>
+          </div>
+          
+          <div class="leave-details">
+            <p class="dates">
+              <ion-icon name="calendar-outline"></ion-icon>
+              Du {{leave.startDate | date:'dd/MM/yyyy'}} au {{leave.endDate | date:'dd/MM/yyyy'}}
+            </p>
+            <p class="reason">
+              <strong>Motif:</strong> {{leave.reason}}
+            </p>
+            <ng-container *ngIf="leave.responseDate && leave.status !== 'En attente RH'">
+              <p class="response">
+                <strong>Réponse ({{leave.responseDate | date:'dd/MM/yyyy'}}) </strong>
+                <ng-container *ngIf="leave.status === 'Rejete'">
+                    {{leave.responseComment}}
+                </ng-container>
+              </p>
+            </ng-container>
+            <div class="leave-actions" *ngIf="canEditLeave(leave)">
+              <ion-button fill="clear" color="primary" (click)="editLeave(leave)">
+                <ion-icon slot="start" name="create-outline"></ion-icon>
+                Modifier
+              </ion-button>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>
