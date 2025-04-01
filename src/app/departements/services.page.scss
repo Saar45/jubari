@@ -1,0 +1,59 @@
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+ion-card {
+  margin: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.stats {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+  
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    ion-icon {
+      font-size: 1.2rem;
+      color: var(--ion-color-medium);
+    }
+  }
+}
+
+ion-item {
+  --padding-start: 16px;
+  --padding-end: 8px;
+  margin: 8px;
+  border-radius: 8px;
+  
+  ion-button {
+    margin-right: 0;
+    --padding-end: 4px;
+    --padding-start: 4px;
+    
+    ion-icon {
+      font-size: 20px;
+    }
+  }
+}
+
+.loading-spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  margin: 20px auto;
+}

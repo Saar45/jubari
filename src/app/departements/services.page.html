@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Services</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="addService()">
+        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let service of services">
+      <ion-label>
+        <h2>{{service.nom}}</h2>
+        <p>{{service.description}}</p>
+        <p *ngIf="service.chef">Chef: {{service.chef.prenom}} {{service.chef.nom}}</p>
+      </ion-label>
+      <ion-button fill="clear" slot="end" (click)="editService(service)">
+        <ion-icon slot="icon-only" name="create-outline" color="primary"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-spinner *ngIf="isLoading" class="loading-spinner"></ion-spinner>
+</ion-content>
