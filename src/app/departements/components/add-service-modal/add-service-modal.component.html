@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ isEdit ? 'Modifier' : 'Ajouter' }} un service</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="serviceForm" (ngSubmit)="submit()">
+
+    <ion-item>
+      <ion-label position="floating">Nom du service</ion-label>
+      <ion-textarea
+        formControlName="description"
+        [counter]="true"
+        [maxlength]="250"
+        [rows]="4">
+      </ion-textarea>
+    </ion-item>
+
+    <ion-item *ngIf="isEdit">
+      <ion-label position="floating">Chef de service</ion-label>
+      <ng-container *ngIf="employees.length > 0; else noEmployees">
+        <ion-select formControlName="chef_id">
+          <ion-select-option [value]="null">Aucun</ion-select-option>
+          <ion-select-option *ngFor="let employee of employees" [value]="employee.id">
+            {{employee.prenom}} {{employee.nom}}
+          </ion-select-option>
+        </ion-select>
+      </ng-container>
+      <ng-template #noEmployees>
+        <ion-text color="medium">
+          <p>Aucun</p>
+        </ion-text>
+      </ng-template>
+    </ion-item>
+
+    <div class="ion-padding">
+      <ion-button color="medium" expand="block" (click)="cancel()" class="ion-margin-bottom">
+        Annuler
+      </ion-button>
+      <ion-button 
+        expand="block"
+        type="submit"
+        [disabled]="!serviceForm.valid">
+        {{ isEdit ? 'Modifier' : 'Ajouter' }}
+      </ion-button>
+    </div>
+  </form>
+</ion-content>
