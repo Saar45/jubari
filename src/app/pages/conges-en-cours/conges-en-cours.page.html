@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Congés en cours</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div *ngIf="isLoading" class="ion-padding ion-text-center">
+    <ion-spinner></ion-spinner>
+    <p>Chargement des congés...</p>
+  </div>
+
+  <div *ngIf="error" class="ion-padding ion-text-center">
+    <ion-icon name="alert-circle" color="danger" size="large"></ion-icon>
+    <p>{{ error }}</p>
+  </div>
+
+  <ion-list *ngIf="!isLoading && !error">
+    <ion-item-group *ngIf="conges.length > 0; else noConges">
+      <ion-item *ngFor="let conge of conges">
+        <ion-label>
+          <h2>{{ conge.employe.prenom }} {{ conge.employe.nom }}</h2>
+          <p>{{ conge.dateDebut | date:'dd/MM/yyyy' }} - {{ conge.dateFin | date:'dd/MM/yyyy' }}</p>
+          <p>{{ conge.description }}</p>
+          <ion-badge color="primary">{{ conge.employe.service?.nom }}</ion-badge>
+        </ion-label>
+      </ion-item>
+    </ion-item-group>
+    
+    <ng-template #noConges>
+      <div class="ion-padding ion-text-center">
+        <ion-icon name="calendar-outline" size="large" color="medium"></ion-icon>
+        <p>Aucun congé en cours</p>
+      </div>
+    </ng-template>
+  </ion-list>
+</ion-content>

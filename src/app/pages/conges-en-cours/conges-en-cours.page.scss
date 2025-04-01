@@ -1,0 +1,35 @@
+ion-content {
+  --background: #f5f7fa;
+}
+
+ion-list {
+  background: transparent;
+  padding: 16px;
+}
+
+ion-item {
+  --background: white;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  --border-radius: 8px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+
+  h2 {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: var(--ion-color-medium);
+    font-size: 14px;
+    margin: 4px 0;
+  }
+
+  ion-badge {
+    margin-top: 8px;
+  }
+}
