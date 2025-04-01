@@ -1,0 +1,142 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Gestion des congés {{ currentUser ? (isHR(currentUser) ? '- RH' : '- ' + currentUser.serviceDirige?.nom) : '' }}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div
+    class="leave-management"
+    *ngIf="currentUser?.serviceDirige || (currentUser && isHR(currentUser)); else noAccess"
+  >
+    <div class="filters-section">
+      <ion-segment [(ngModel)]="selectedFilter">
+        <ion-segment-button value="pending">
+          <ion-label>En attente</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="approved">
+          <ion-label>Approuvés</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="denied">
+          <ion-label>Refusés</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+
+      <ion-searchbar placeholder="Rechercher une demande"></ion-searchbar>
+    </div>
+
+    <div class="requests-grid">
+      <ion-card *ngFor="let leave of leaveRequests">
+        <ion-card-content>
+          <div class="request-header">
+            <div class="employee-info">
+              <ion-avatar>
+                <img
+                  src="https://ionicframework.com/docs/img/demos/avatar.svg"
+                />
+              </ion-avatar>
+              <div class="text-info">
+                <h2>{{leave.employe.nom}} {{leave.employe.prenom}}</h2>
+                <p>{{leave.employe.role}}</p>
+              </div>
+            </div>
+            <ion-chip
+              [color]="leave.historiqueConge.etat === 'En attente' ? 'warning' : 'medium'"
+            >
+              <ion-icon
+                name="time-outline"
+                *ngIf="leave.historiqueConge.etat === 'En attente'"
+              ></ion-icon>
+              <ion-label
+                >{{getDaysUntilStart(leave.dateDebut)}} jours avant
+                début</ion-label
+              >
+            </ion-chip>
+          </div>
+
+          <div class="request-details">
+            <div class="detail-row">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span>Congé {{leave.paye === 1 ? 'payé' : 'non payé'}}</span>
+            </div>
+            <div class="detail-row">
+              <ion-icon name="time-outline"></ion-icon>
+              <span
+                >Du {{leave.dateDebut | date:'dd/MM/yyyy'}} au {{leave.dateFin |
+                date:'dd/MM/yyyy'}}</span
+              >
+            </div>
+            <div class="detail-row">
+              <ion-icon name="document-text-outline"></ion-icon>
+              <span>{{leave.description}}</span>
+            </div>
+            <div class="detail-row" *ngIf="leave.motif">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              <span>Motif: {{leave.motif}}</span>
+            </div>
+            <div class="detail-row" *ngIf="currentUser && isHR(currentUser) && leave.historiqueConge.etat === 'En attente RH'">
+              <ion-icon name="person-outline"></ion-icon>
+              <span>Approuvé par: {{leave.nom_signataire_chef}} {{leave.prenom_signataire_chef}}</span>
+            </div>
+          </div>
+
+          <div class="action-buttons" *ngIf="leave.historiqueConge.etat === 'En attente'">
+            <ion-button
+              *ngIf="currentUser && !isHR(currentUser)"
+              fill="clear"
+              color="danger"
+              (click)="openDenyDialog(leave)"
+            >
+              <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+              Refuser
+            </ion-button>
+            <ion-button
+              *ngIf="currentUser && !isHR(currentUser)"
+              fill="clear"
+              color="success"
+              (click)="approveLeave(leave.id, leave.historiqueConge.id)"
+            >
+              <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+              Approuver
+            </ion-button>
+          </div>
+
+          <div class="action-buttons" *ngIf="(leave.historiqueConge.etat === 'En attente RH' || leave.historiqueConge.etat === 'En attente') && currentUser && isHR(currentUser)">
+            <ion-button
+              fill="clear"
+              color="danger"
+              (click)="hrDenyLeave(leave)"
+            >
+              <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+              Refuser
+            </ion-button>
+            <ion-button
+              fill="clear"
+              color="success"
+              (click)="hrApproveLeave(leave.id, leave.historiqueConge.id)"
+            >
+              <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+              Approuver
+            </ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <ng-template #noAccess>
+    <div class="no-access">
+      <ion-text color="danger">
+        <h2>Accès non autorisé</h2>
+        <p>
+          Vous n'avez pas les permissions nécessaires pour accéder à cette page.
+        </p>
+      </ion-text>
+    </div>
+  </ng-template>
+</ion-content>
