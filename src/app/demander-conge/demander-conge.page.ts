@@ -33,8 +33,7 @@ export class DemanderCongePage implements OnInit {
   maxDate = new Date(new Date().getFullYear() + 1, 11, 31).toISOString();
 
   leaveTypes: LeaveType[] = [
-    { id: '1', name: 'Congé payé', maxDays: 30, icon: 'calendar-number-outline' },
-    { id: '0', name: 'Congé non payé', maxDays: 365, icon: 'calendar-outline' }
+    { id: '1', name: 'Congé payé', maxDays: 30, icon: 'calendar-number-outline' }
   ];
 
   leaveBalance = {
@@ -57,10 +56,10 @@ export class DemanderCongePage implements OnInit {
     this.minDate = defaultStartDate; // Set minDate to default start date
 
     this.leaveForm = this.fb.group({
-      type: ['0', Validators.required], // Set default to unpaid
+      type: ['1', Validators.required], // Set default to paid leave
       startDate: [defaultStartDate, Validators.required],
       endDate: [defaultEndDate, Validators.required],
-      reason: ['', [Validators.required, Validators.minLength(10)]]
+      reason: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(275)]]
     });
 
     // Update endDate when startDate changes
@@ -132,6 +131,10 @@ export class DemanderCongePage implements OnInit {
       return days + 1;
     }
     return 0;
+  }
+
+  counterFormatter(currentLength: number, maxLength: number): string {
+    return `${currentLength}/${maxLength}`;
   }
 
   async submitLeaveRequest() {

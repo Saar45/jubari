@@ -15,23 +15,27 @@
     *ngIf="currentUser?.serviceDirige || (currentUser && isHR(currentUser)); else noAccess"
   >
     <div class="filters-section">
-      <ion-segment [(ngModel)]="selectedFilter">
-        <ion-segment-button value="pending">
-          <ion-label>En attente</ion-label>
+      <ion-searchbar 
+        [(ngModel)]="searchTerm" 
+        (ionChange)="filterLeaveRequests()"
+        placeholder="Rechercher par nom complet">
+      </ion-searchbar>
+
+      <ion-segment [(ngModel)]="sortOrder" (ionChange)="sortLeaveRequests()">
+        <ion-segment-button value="none">
+          <ion-label>Sans tri</ion-label>
         </ion-segment-button>
-        <ion-segment-button value="approved">
-          <ion-label>Approuvés</ion-label>
+        <ion-segment-button value="asc">
+          <ion-label>Croissant</ion-label>
         </ion-segment-button>
-        <ion-segment-button value="denied">
-          <ion-label>Refusés</ion-label>
+        <ion-segment-button value="desc">
+          <ion-label>Décroissant</ion-label>
         </ion-segment-button>
       </ion-segment>
-
-      <ion-searchbar placeholder="Rechercher une demande"></ion-searchbar>
     </div>
 
     <div class="requests-grid">
-      <ion-card *ngFor="let leave of leaveRequests">
+      <ion-card *ngFor="let leave of filteredLeaveRequests">
         <ion-card-content>
           <div class="request-header">
             <div class="employee-info">

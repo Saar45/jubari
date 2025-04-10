@@ -16,6 +16,18 @@ import { EmployeeModalComponent } from './employee-modal/employee-modal.componen
 })
 export class EmployesPage implements OnInit {
   employees: Employe[] = [];
+  searchText: string = '';
+
+  get filteredEmployees(): Employe[] {
+    if (!this.searchText) return this.employees;
+    
+    const searchLower = this.searchText.toLowerCase();
+    return this.employees.filter(employee => {
+      const fullName = `${employee.prenom} ${employee.nom}`.toLowerCase();
+      const email = employee.email.toLowerCase();
+      return fullName.includes(searchLower) || email.includes(searchLower);
+    });
+  }
 
   constructor(
     private adamantiumService: AdamantiumService,

@@ -32,6 +32,8 @@ export class HistoriqueCongesPage implements OnInit {
   leaveRequests: LeaveRequest[] = [];
   filteredRequests: LeaveRequest[] = [];
   selectedSegment = 'all';
+  searchStartDate: string = '';
+  searchEndDate: string = '';
 
   constructor(
     private vibraniumService: VibraniumService,
@@ -68,18 +70,46 @@ export class HistoriqueCongesPage implements OnInit {
   }
 
   private filterRequests(segment: string) {
+    this.filteredRequests = this.getSegmentFilteredRequests(segment);
+    this.filterByDate();
+  }
+
+  private getSegmentFilteredRequests(segment: string): LeaveRequest[] {
     switch (segment) {
       case 'approved':
-        this.filteredRequests = this.leaveRequests.filter(req => req.status === 'Accepte');
-        break;
+        return this.leaveRequests.filter(req => req.status === 'Accepte');
       case 'waiting':
-        this.filteredRequests = this.leaveRequests.filter(req => 
+        return this.leaveRequests.filter(req => 
           req.status === 'En attente' || req.status === 'En attente RH'
         );
-        break;
       default:
-        this.filteredRequests = [...this.leaveRequests];
+        return [...this.leaveRequests];
     }
+  }
+
+  filterByDate() {
+    if (!this.searchStartDate && !this.searchEndDate) {
+      this.filterRequests(this.selectedSegment);
+      return;
+    }
+
+    const start = this.searchStartDate ? moment(this.searchStartDate) : null;
+    const end = this.searchEndDate ? moment(this.searchEndDate) : null;
+
+    const filteredBySegment = this.getSegmentFilteredRequests(this.selectedSegment);
+    this.filteredRequests = filteredBySegment.filter(req => {
+      const leaveStart = moment(req.startDate);
+      const leaveEnd = moment(req.endDate);
+      
+      if (start && end) {
+        return leaveStart.isSameOrAfter(start) && leaveEnd.isSameOrBefore(end);
+      } else if (start) {
+        return leaveStart.isSameOrAfter(start);
+      } else if (end) {
+        return leaveEnd.isSameOrBefore(end);
+      }
+      return true;
+    });
   }
 
   hasRequestsWithStatus(status: string): boolean {

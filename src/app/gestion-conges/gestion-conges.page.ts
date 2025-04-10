@@ -21,6 +21,9 @@ export class GestionCongesPage implements OnInit {
   selectedFilter = 'pending';
   leaveRequests: Conge[] = [];
   currentUser?: Employe;
+  searchTerm: string = '';
+  sortOrder: 'none' | 'asc' | 'desc' = 'none';
+  filteredLeaveRequests: any[] = [];
 
   constructor(
     private vibraniumService: VibraniumService,
@@ -33,6 +36,7 @@ export class GestionCongesPage implements OnInit {
 
   ngOnInit() {
     this.loadCurrentUser();
+    this.filteredLeaveRequests = this.leaveRequests;
   }
 
   async loadCurrentUser() {
@@ -70,6 +74,7 @@ export class GestionCongesPage implements OnInit {
           conge.historiqueConge?.etat === 'En attente' && 
           conge.employe.id !== this.currentUser?.id
         );
+        this.filterLeaveRequests();
       }
     );
   }
@@ -85,6 +90,7 @@ export class GestionCongesPage implements OnInit {
         );
 
         console.log('Filtered Conges:', this.leaveRequests);
+        this.filterLeaveRequests();
       }
     );
   }
@@ -143,14 +149,16 @@ export class GestionCongesPage implements OnInit {
   }
 
   async openDenyDialog(leave: Conge) {
-    // Use AlertController instead of prompt
     const alert = await this.alertController.create({
       header: 'Refuser la demande',
       inputs: [
         {
           name: 'motif',
           type: 'textarea',
-          placeholder: 'Motif du refus'
+          placeholder: 'Motif du refus (max 190 caractères)',
+          attributes: {
+            maxlength: 190
+          }
         }
       ],
       buttons: [
@@ -262,7 +270,10 @@ export class GestionCongesPage implements OnInit {
         {
           name: 'motif',
           type: 'textarea',
-          placeholder: 'Motif du refus'
+          placeholder: 'Motif du refus (max 190 caractères)',
+          attributes: {
+            maxlength: 190
+          }
         }
       ],
       buttons: [
@@ -320,5 +331,30 @@ export class GestionCongesPage implements OnInit {
 
   getDaysUntilStart(startDate: string): number {
     return moment(startDate).startOf('day').diff(moment().startOf('day'), 'days');
+  }
+
+  filterLeaveRequests() {
+    if (!this.searchTerm.trim()) {
+      this.filteredLeaveRequests = this.leaveRequests;
+    } else {
+      const searchTermLower = this.searchTerm.toLowerCase();
+      this.filteredLeaveRequests = this.leaveRequests.filter(leave => {
+        const fullName = `${leave.employe.nom} ${leave.employe.prenom}`.toLowerCase();
+        return fullName.includes(searchTermLower);
+      });
+    }
+    this.sortLeaveRequests();
+  }
+
+  sortLeaveRequests() {
+    if (this.sortOrder === 'none') {
+      this.filteredLeaveRequests = [...this.filteredLeaveRequests];
+    } else {
+      this.filteredLeaveRequests.sort((a, b) => {
+        const daysA = this.getDaysUntilStart(a.dateDebut);
+        const daysB = this.getDaysUntilStart(b.dateDebut);
+        return this.sortOrder === 'asc' ? daysA - daysB : daysB - daysA;
+      });
+    }
   }
 }

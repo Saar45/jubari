@@ -15,11 +15,14 @@
 <ion-content>
   <div class="employee-list">
     <div class="search-bar">
-      <ion-searchbar placeholder="Rechercher un employé"></ion-searchbar>
+      <ion-searchbar 
+        [(ngModel)]="searchText" 
+        placeholder="Rechercher par nom ou email">
+      </ion-searchbar>
     </div>
 
     <div class="employee-grid">
-      <ion-card *ngFor="let employee of employees">
+      <ion-card *ngFor="let employee of filteredEmployees">
         <ion-card-content>
           <div class="employee-header">
             <ion-avatar>

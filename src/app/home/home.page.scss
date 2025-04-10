@@ -112,6 +112,7 @@ ion-content {
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.05);
   transition: all 0.2s;
+  position: relative;
   
   &:hover {
     transform: translateY(-2px);
@@ -141,6 +142,12 @@ ion-content {
       font-weight: 500;
       font-size: 14px;
     }
+
+    &:hover {
+      .tooltip-text {
+        display: block;
+      }
+    }
   }
   
   ion-icon {
@@ -153,6 +160,21 @@ ion-content {
     color: #2c3e50;
     font-size: 14px;
     font-weight: 500;
+  }
+
+  .tooltip-text {
+    display: none;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    z-index: 1000;
   }
 }
 
@@ -170,7 +192,8 @@ ion-list {
     margin-bottom: 8px;
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-    
+    position: relative;
+
     ion-icon {
       color: #007bff;
       margin-right: 12px;
@@ -187,6 +210,27 @@ ion-list {
 
     &::part(native) {
       --ion-item-color: #2c3e50;
+    }
+
+    .tooltip-text {
+      display: none;
+      position: absolute;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      z-index: 1000;
+    }
+
+    &:hover {
+      .tooltip-text {
+        display: block;
+      }
     }
   }
 }

@@ -12,10 +12,31 @@ ion-content {
   margin-bottom: 24px;
   
   ion-segment {
+    margin-top: 16px;
     margin-bottom: 16px;
     background: white;
     border-radius: 8px;
     padding: 4px;
+
+    ion-segment-button {
+      --color: #666;
+      --color-checked: #3880ff;
+      --background: transparent;
+      --background-checked: rgba(56, 128, 255, 0.1);
+      --border-radius: 6px;
+      --border-color: transparent;
+      --border-style: none;
+      --indicator-color: transparent;
+      
+      &::part(indicator) {
+        display: none;
+      }
+
+      ion-label {
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
   }
 
   ion-searchbar {

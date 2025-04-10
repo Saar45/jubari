@@ -138,6 +138,13 @@ ion-textarea {
   border: 1px #e0e0e0;
   border-radius: 8px;
   margin: 8px 0;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-top: 8px;
 }
 
 ion-button {

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { IonicModule, ModalController, ToastController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { User } from '../../models/user.model';
@@ -49,13 +49,26 @@ import { AdamantiumService } from '../../services/adamantium.service';
           </ion-text>
           <ion-item>
             <ion-label position="floating">Ancien mot de passe</ion-label>
-            <ion-input formControlName="oldPassword" type="password"></ion-input>
+            <ion-input formControlName="oldPassword" [type]="oldPasswordType"></ion-input>
+            <ion-icon [name]="oldPasswordType === 'password' ? 'eye-outline' : 'eye-off-outline'"
+                    (click)="toggleOldPasswordVisibility()"
+                    class="password-toggle">
+            </ion-icon>
           </ion-item>
 
           <ion-item>
             <ion-label position="floating">Nouveau mot de passe</ion-label>
-            <ion-input formControlName="newPassword" type="password"></ion-input>
+            <ion-input formControlName="newPassword" [type]="newPasswordType"></ion-input>
+            <ion-icon [name]="newPasswordType === 'password' ? 'eye-outline' : 'eye-off-outline'"
+                    (click)="toggleNewPasswordVisibility()"
+                    class="password-toggle">
+            </ion-icon>
           </ion-item>
+          <div class="error-messages" *ngIf="profileForm.get('newPassword')?.touched && profileForm.get('newPassword')?.errors">
+            <ion-text color="danger" *ngIf="profileForm.get('newPassword')?.errors?.['pattern']">
+              Le mot de passe doit contenir au moins 8 caractères, une majuscule, un chiffre et un caractère spécial
+            </ion-text>
+          </div>
 
           <ion-button expand="block" 
                     (click)="onSubmitPassword()" 
@@ -77,6 +90,20 @@ import { AdamantiumService } from '../../services/adamantium.service';
         margin: 0 0 16px;
         font-weight: 500;
       }
+      .password-toggle {
+        font-size: 1.2rem;
+        color: #666;
+        cursor: pointer;
+        padding: 8px;
+        position: absolute;
+        right: 8px;
+        bottom: 8px;
+      }
+      
+      .error-messages {
+        margin-top: 4px;
+        font-size: 12px;
+      }
     </style>
   `,
   standalone: true,
@@ -85,18 +112,24 @@ import { AdamantiumService } from '../../services/adamantium.service';
 export class EditProfileComponent implements OnInit {
   @Input() user!: User;
   profileForm: FormGroup;
+  oldPasswordType: string = 'password';
+  newPasswordType: string = 'password';
 
   constructor(
     private modalCtrl: ModalController,
     private fb: FormBuilder,
-    private adamantiumService: AdamantiumService
+    private adamantiumService: AdamantiumService,
+    private toastCtrl: ToastController
   ) {
     this.profileForm = this.fb.group({
       prenom: ['', Validators.required],
       nom: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      oldPassword: [''],
-      newPassword: ['']
+      oldPassword: ['', Validators.required],
+      newPassword: ['', [
+        Validators.required,
+        Validators.pattern(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*=])[a-zA-Z0-9!@#$%^&*=]{8,}$/)
+      ]]
     });
   }
 
@@ -113,9 +146,17 @@ export class EditProfileComponent implements OnInit {
     return prenom.valid && nom.valid && email.valid;
   }
 
+  toggleOldPasswordVisibility() {
+    this.oldPasswordType = this.oldPasswordType === 'password' ? 'text' : 'password';
+  }
+
+  toggleNewPasswordVisibility() {
+    this.newPasswordType = this.newPasswordType === 'password' ? 'text' : 'password';
+  }
+
   isPasswordValid(): boolean {
     const { oldPassword, newPassword } = this.profileForm.controls;
-    return oldPassword.value && newPassword.value;
+    return oldPassword.valid && newPassword.valid;
   }
 
   async onSubmitProfile() {
@@ -129,28 +170,40 @@ export class EditProfileComponent implements OnInit {
 
       try {
         await this.adamantiumService.updateUser(this.user.id, userData).toPromise();
+        await this.showToast('Mis à jour réussie', 'success');
         this.dismiss(true);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error updating profile:', error);
+        await this.showToast(error?.error?.messages?.error || 'Erreur lors de la mise à jour', 'danger');
       }
     }
   }
 
   async onSubmitPassword() {
     if (this.isPasswordValid()) {
-      const userData = {
-        ...this.user,
-        oldPassword: this.profileForm.value.oldPassword,
-        password: this.profileForm.value.newPassword
-      };
-
       try {
-        await this.adamantiumService.updateUser(this.user.id, userData).toPromise();
+        await this.adamantiumService.updatePassword(
+          this.user.id,
+          this.profileForm.value.oldPassword,
+          this.profileForm.value.newPassword
+        ).toPromise();
+        await this.showToast('Mis à jour réussie', 'success');
         this.dismiss(true);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error updating password:', error);
+        await this.showToast(error?.error?.messages?.error || 'Erreur lors de la mise à jour', 'danger');
       }
     }
+  }
+
+  private async showToast(message: string, color: 'success' | 'danger') {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 5000,
+      color,
+      position: 'bottom'
+    });
+    await toast.present();
   }
 
   dismiss(updated = false) {

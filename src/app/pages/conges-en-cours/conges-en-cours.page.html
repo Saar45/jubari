@@ -26,7 +26,10 @@
     <ion-item-group *ngIf="conges.length > 0; else noConges">
       <ion-item *ngFor="let conge of conges">
         <ion-label>
-          <h2>{{ conge.employe.prenom }} {{ conge.employe.nom }}</h2>
+          <div class="employee-header">
+            <h2>{{ conge.employe.prenom }} {{ conge.employe.nom }}</h2>
+            <ion-icon name="airplane-outline" title="En congé"></ion-icon>
+          </div>
           <p>{{ conge.dateDebut | date:'dd/MM/yyyy' }} - {{ conge.dateFin | date:'dd/MM/yyyy' }}</p>
           <p>{{ conge.description }}</p>
           <ion-badge color="primary">{{ conge.employe.service?.nom }}</ion-badge>

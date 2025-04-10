@@ -52,6 +52,14 @@ export class AdamantiumService {
     });
   }
 
+  updatePassword(userId: number, oldPassword: string, newPassword: string): Observable<any> {
+    return this.http.put(`${this.API_URL}/employepassword`, {
+      id: userId,
+      old_password: oldPassword,
+      password: newPassword
+    }, { headers: this.getHeaders() });
+  }
+
   // Get user's leave balance
   getUserLeaveBalance(userId: number): Observable<{ remaining: number, taken: number }> {
     return this.http.get<{ remaining: number, taken: number }>(`${this.API_URL}/users/${userId}/leave-balance`, { headers: this.getHeaders() });

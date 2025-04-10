@@ -28,10 +28,14 @@ ion-card {
   margin: 0;
   box-shadow: 0 2px 12px rgba(0,0,0,0.05);
   border-radius: 12px;
+  --background: var(--ion-color-light);
+  background: var(--ion-color-light);
+  border: 1px var(--ion-color-medium-tint);
   
   &:hover {
     transform: translateY(-2px);
     transition: transform 0.2s;
+    background: var(--ion-color-light-shade);
   }
 }
 
@@ -51,7 +55,7 @@ ion-card {
       margin: 0;
       font-size: 18px;
       font-weight: 600;
-      color: #2c3e50;
+      color: white;
     }
     
     .name-badge {
@@ -60,7 +64,7 @@ ion-card {
       gap: 8px;
 
       .manager-badge {
-        color: #3880ff;
+        color: var(--ion-color-primary);
         font-size: 18px;
       }
     }
@@ -68,7 +72,7 @@ ion-card {
     p {
       margin: 4px 0 0;
       font-size: 14px;
-      color: #666;
+      color: rgba(255, 255, 255, 0.9);
     }
   }
 }
@@ -77,10 +81,11 @@ ion-card {
   p {
     margin: 8px 0;
     font-size: 14px;
-    color: #2c3e50;
+    color: rgba(255, 255, 255, 0.95);
     
     strong {
-      color: #666;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 600;
     }
   }
 }
@@ -92,6 +97,7 @@ ion-card {
   
   ion-button {
     margin-left: 8px;
+    --color: white;
   }
 }
 

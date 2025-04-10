@@ -4,21 +4,22 @@
   padding: 16px;
 
   ion-item {
-    --background: #f8f9fa;
+    --background: white;
     --border-radius: 8px;
     margin-bottom: 16px;
     
     ion-label {
-      color: #2c3e50;
+      color: black;
       font-weight: 500;
       margin-bottom: 8px;
     }
 
     ion-input, ion-textarea {
-      --background: #f8f9fa;
+      --background: white;
       --padding-start: 16px;
       --padding-end: 16px;
       margin-top: 8px;
+      color: black;
     }
   }
 }

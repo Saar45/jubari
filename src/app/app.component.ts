@@ -27,6 +27,10 @@ import {
   checkmarkCircle,
   constructOutline,
   alertCircle,
+  funnelOutline,
+  airplaneOutline,
+  calendarClearSharp,
+  calendarClearOutline,
 } from 'ionicons/icons';
 
 @Component({
@@ -43,7 +47,7 @@ export class AppComponent implements OnInit, OnDestroy {
       logOutOutline, eyeOutline, eyeOffOutline, gridOutline,
       calendarOutline, timeOutline, peopleOutline, hourglassOutline,
       checkmarkCircleOutline, chatbubblesOutline, documentTextOutline,
-      createOutline, trashOutline, addOutline, closeCircleOutline, informationCircleOutline, sunnyOutline, medicalOutline, warningOutline, calendarNumberOutline, shieldCheckmark, personOutline, mailOutline, homeOutline, locationOutline, businessOutline, briefcaseOutline, person, create, mail, closeOutline, close, checkmarkCircle, constructOutline, alertCircle
+      createOutline, trashOutline, addOutline, closeCircleOutline, informationCircleOutline, sunnyOutline, medicalOutline, warningOutline, calendarNumberOutline, shieldCheckmark, personOutline, mailOutline, homeOutline, locationOutline, businessOutline, briefcaseOutline, person, create, mail, closeOutline, close, checkmarkCircle, constructOutline, alertCircle, funnelOutline, airplaneOutline, calendarClearOutline
     });
   }
 

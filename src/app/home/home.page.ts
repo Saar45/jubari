@@ -35,10 +35,19 @@ export class HomePage {
   };
 
   quickActions = [
-    { title: 'Demander un congé', icon: 'calendar-number-outline', color: '#4CAF50', path: '/demander-conge' },
-    { title: 'Voir planning', icon: 'time-outline', color: '#2196F3', path: '/planning', adminTitle: 'Voir congé(s) en cours', adminPath: '/conges-en-cours' },
-    { title: 'Soumettre une alerte', icon: 'warning-outline', color: '#FF9800', path: null },
-    { title: 'Chat d\'équipe', icon: 'chatbubbles-outline', color: '#9C27B0', path: '/chat' }
+    { title: 'Demander un congé', icon: 'calendar-number-outline', color: '#4CAF50', path: '/demander-conge', disabled: false },
+    { 
+      title: 'Mes Absences', 
+      icon: 'calendar-clear-outline', 
+      color: '#2196F3', 
+      path: '/mes-absences',
+      adminTitle: 'Voir congé(s) en cours', 
+      adminPath: '/conges-en-cours',
+      disabled: false,
+      tooltip: 'Fonctionnalité bientôt disponible'
+    },
+    { title: 'Soumettre une alerte', icon: 'warning-outline', color: '#FF9800', path: null, disabled: false },
+    { title: 'Chat d\'équipe', icon: 'chatbubbles-outline', color: '#9C27B0', path: '/chat', disabled: true, tooltip: 'Fonctionnalité bientôt disponible' }
   ];
 
   userProfile?: User;
@@ -88,10 +97,17 @@ export class HomePage {
           this.userProfile = user;
           this.userName = `${user.prenom} ${user.nom}`;
           
-          // Update quick actions for admin
+          // Update quick actions based on user role
           if (user.role === 'Administrateur' || user.service?.nom === 'Ressources Humaines') {
             this.quickActions[1].title = this.quickActions[1].adminTitle as string;
             this.quickActions[1].path = this.quickActions[1].adminPath as string;
+            this.quickActions[1].disabled = false;
+            delete this.quickActions[1].tooltip;
+          } else {
+            // Ensure regular employee sees "Mes Absences"
+            this.quickActions[1].title = 'Mes Absences';
+            this.quickActions[1].path = '/mes-absences';
+            this.quickActions[1].disabled = true;
           }
           
           this.loadCongeStats(userId);

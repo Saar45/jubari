@@ -20,13 +20,13 @@
               <span class="balance-label">Jours disponibles</span>
             </div>
           </div>
-          <div class="balance-item">
+          <!-- <div class="balance-item">
             <ion-icon name="medical-outline" color="danger"></ion-icon>
             <div class="balance-info">
               <span class="balance-value">{{leaveBalance.sickLeave}}</span>
               <span class="balance-label">Congé maladie</span>
             </div>
-          </div>
+          </div> -->
         </div>
       </ion-card-content>
     </ion-card>
@@ -39,16 +39,8 @@
       <ion-card-content>
         <form [formGroup]="leaveForm" (ngSubmit)="submitLeaveRequest()">
           <ion-list>
-            <ion-radio-group formControlName="type">
-              <div class="type-grid">
-                <ion-item lines="none" *ngFor="let type of leaveTypes">
-                  <ion-label>
-                    <h3>{{type.name}}</h3>
-                  </ion-label>
-                  <ion-radio [value]="type.id"></ion-radio>
-                </ion-item>
-              </div>
-            </ion-radio-group>
+            <!-- Hidden input for leave type -->
+            <input type="hidden" formControlName="type" value="1">
 
             <div class="date-grid">
               <ion-item>
@@ -62,8 +54,15 @@
             </div>
 
             <ion-item>
-              <ion-label position="stacked">Motif</ion-label>
-              <ion-textarea formControlName="reason" rows="3"></ion-textarea>
+              <ion-label position="stacked">Motif du congé</ion-label>
+              <ion-textarea
+                formControlName="reason"
+                placeholder="Décrivez le motif de votre congé"
+                [counter]="true"
+                [maxlength]="275"
+                [counterFormatter]="counterFormatter"
+                rows="4">
+              </ion-textarea>
             </ion-item>
 
             <!-- Attachment item removed -->

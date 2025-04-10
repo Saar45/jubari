@@ -17,6 +17,25 @@ ion-item {
   --padding-top: 12px;
   --padding-bottom: 12px;
 
+  .employee-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    h2 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--ion-color-primary);
+    }
+
+    ion-icon {
+      color: var(--ion-color-warning);
+      font-size: 20px;
+    }
+  }
+
   h2 {
     font-weight: 600;
     font-size: 16px;

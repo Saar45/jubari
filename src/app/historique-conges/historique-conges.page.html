@@ -10,8 +10,19 @@
 <ion-content>
   <div class="leave-history">
     <div class="search-bar">
-      <ion-searchbar placeholder="Rechercher un congé"></ion-searchbar>
-      <ion-segment [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)">
+      <div class="date-filters">
+        <ion-item>
+          <ion-icon name="funnel-outline" slot="start" color="primary"></ion-icon>
+          <ion-label position="stacked">Date début</ion-label>
+          <ion-input type="date" [(ngModel)]="searchStartDate" (ionChange)="filterByDate()" aria-label="Filter by start date"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="funnel-outline" slot="start" color="primary"></ion-icon>
+          <ion-label position="stacked">Date fin</ion-label>
+          <ion-input type="date" [(ngModel)]="searchEndDate" (ionChange)="filterByDate()" aria-label="Filter by end date"></ion-input>
+        </ion-item>
+      </div>
+      <ion-segment [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)" class="custom-segment">
         <ion-segment-button value="all">
           <ion-label>Tous</ion-label>
         </ion-segment-button>

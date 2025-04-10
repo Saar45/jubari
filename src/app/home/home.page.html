@@ -62,10 +62,14 @@
     <div class="quick-actions">
       <div class="action-card" *ngFor="let action of quickActions" [style.--card-color]="action.color">
         <ion-item button 
-          [routerLink]="action.path ? [action.path] : null"
-          (click)="!action.path && action.title === 'Soumettre une alerte' && openSubmitMessage()">
+          [routerLink]="!action.disabled ? (action.path ? [action.path] : null) : null"
+          (click)="!action.disabled && !action.path && action.title === 'Soumettre une alerte' && openSubmitMessage()"
+          [disabled]="action.disabled">
           <ion-icon slot="start" [name]="action.icon"></ion-icon>
           <ion-label>{{action.title}}</ion-label>
+          <ion-text *ngIf="action.disabled && action.tooltip" class="tooltip-text">
+            {{action.tooltip}}
+          </ion-text>
         </ion-item>
       </div>
     </div>
@@ -75,9 +79,18 @@
       <h2>Menu</h2>
     </div>
     <ion-list lines="none">
-      <ion-item button [routerLink]="['/services']">
+      <!-- For admins and HR -->
+      <ion-item button [routerLink]="['/services']" *ngIf="userProfile?.role === 'Administrateur' || userProfile?.service?.nom === 'Ressources Humaines'">
         <ion-icon slot="start" name="grid-outline"></ion-icon>
         <ion-label>Services</ion-label>
+      </ion-item>
+      <!-- For regular employees -->
+      <ion-item button [routerLink]="['/mon-planning']" disabled>
+        <ion-icon slot="start" name="calendar-clear-outline"></ion-icon>
+        <ion-label>Mon Planning</ion-label>
+        <ion-text *ngIf="userProfile?.role !== 'Administrateur' && userProfile?.service?.nom !== 'Ressources Humaines'" class="tooltip-text">
+          Fonctionnalité bientôt disponible
+        </ion-text>
       </ion-item>
       <ion-item button [routerLink]="['/gestion-conges']">
         <ion-icon slot="start" name="calendar-outline"></ion-icon>
@@ -87,7 +100,7 @@
         <ion-icon slot="start" name="time-outline"></ion-icon>
         <ion-label>Historique des congés</ion-label>
       </ion-item>
-      <ion-item button [routerLink]="['/employes']">
+      <ion-item button [routerLink]="['/employes']" *ngIf="userProfile?.role === 'Administrateur' || userProfile?.service?.nom === 'Ressources Humaines'">
         <ion-icon slot="start" name="people-outline"></ion-icon>
         <ion-label>Employés</ion-label>
       </ion-item>
