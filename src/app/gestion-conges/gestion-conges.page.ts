@@ -34,9 +34,19 @@ export class GestionCongesPage implements OnInit {
     private alertController: AlertController
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loadCurrentUser();
     this.filteredLeaveRequests = this.leaveRequests;
+    if (!this.currentUser?.serviceDirige && !(this.currentUser && this.isHR(this.currentUser))) {
+      const toast = await this.toastController.create({
+        message: 'Veuillez contacter votre chef de service pour toutes questions sur vos congés',
+        duration: 5000,
+        position: 'bottom',
+        color: 'warning'
+      });
+      await toast.present();
+      this.router.navigate(['/home']);
+    }
   }
 
   async loadCurrentUser() {

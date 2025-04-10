@@ -18,6 +18,7 @@ export interface Conge {
 }
 
 export interface CongeStats {
+  joursRestants: number;
   en_attente: number;
   rejete: number;
   accepte: number;

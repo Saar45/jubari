@@ -37,8 +37,6 @@ export class DemanderCongePage implements OnInit {
   ];
 
   leaveBalance = {
-    paidLeave: 30,
-    sickLeave: 15,
     remainingDays: 0
   };
 
@@ -78,14 +76,14 @@ export class DemanderCongePage implements OnInit {
 
   loadLeaveBalance() {
     const userId = this.authService.getUserId();
-    this.vibraniumService.getEmployeCongeStats(userId).subscribe(stats => {
+    this.vibraniumService.getEmployeCongeStats(userId).subscribe({
+      next: (stats) => {
         console.log('Leave balance:', stats);
-        
-     /*  this.leaveBalance = {
-       paidLeave: stats.soldeConge,
-        sickLeave: stats.soldeMaladie,
-        remainingDays: stats.soldeConge
-      };*/
+        this.leaveBalance.remainingDays = stats.joursRestants; // Fixed: joursRestant -> joursRestants
+      },
+      error: (error) => {
+        console.error('Error loading leave balance:', error);
+      }
     });
   }
 

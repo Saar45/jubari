@@ -10,10 +10,7 @@
 </ion-header>
 
 <ion-content>
-  <div
-    class="leave-management"
-    *ngIf="currentUser?.serviceDirige || (currentUser && isHR(currentUser)); else noAccess"
-  >
+  <div class="leave-management" *ngIf="currentUser?.serviceDirige || (currentUser && isHR(currentUser))">
     <div class="filters-section">
       <ion-searchbar 
         [(ngModel)]="searchTerm" 
@@ -132,15 +129,4 @@
       </ion-card>
     </div>
   </div>
-
-  <ng-template #noAccess>
-    <div class="no-access">
-      <ion-text color="danger">
-        <h2>Accès non autorisé</h2>
-        <p>
-          Vous n'avez pas les permissions nécessaires pour accéder à cette page.
-        </p>
-      </ion-text>
-    </div>
-  </ng-template>
 </ion-content>
