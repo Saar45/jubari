@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, timer, Subscription, fromEvent } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 export interface LoginResponse {
   token: string;
@@ -24,7 +25,7 @@ export interface RegisterRequest {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = 'http://localhost:8000';
+  private readonly API_URL = environment.apiUrl;
   private readonly INACTIVITY_TIMEOUT = 10 * 60 * 1000; // 10 minutes in milliseconds
   private activityCheckTimer?: Subscription;
   private lastActivity: number = Date.now();

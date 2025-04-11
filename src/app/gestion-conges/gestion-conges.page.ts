@@ -35,9 +35,13 @@ export class GestionCongesPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.loadCurrentUser();
+    await this.loadCurrentUser();
     this.filteredLeaveRequests = this.leaveRequests;
-    if (!this.currentUser?.serviceDirige && !(this.currentUser && this.isHR(this.currentUser))) {
+    if (!this.currentUser) {
+      return;
+    }
+
+    if (!this.currentUser.serviceDirige && !this.isHR(this.currentUser)) {
       const toast = await this.toastController.create({
         message: 'Veuillez contacter votre chef de service pour toutes questions sur vos congés',
         duration: 5000,
@@ -60,6 +64,8 @@ export class GestionCongesPage implements OnInit {
            this.router.navigate(['/home']);
          } else {
            if (this.isHR(user)) {
+            console.log('User is HR');
+            
              // For HR, load all leave requests
                 this.loadAllConges();
            } else {
@@ -96,7 +102,7 @@ export class GestionCongesPage implements OnInit {
           // Show conges with "En attente RH" status
           conge.historiqueConge?.etat === 'En attente RH' ||
           // AND show conges with "En attente" status only if the owner of the conge has a serviceDirige
-          (conge.historiqueConge?.etat === 'En attente' && conge.employe.serviceDirige)          
+          (conge.historiqueConge?.etat === 'En attente')          
         );
 
         console.log('Filtered Conges:', this.leaveRequests);

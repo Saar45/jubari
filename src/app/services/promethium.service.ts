@@ -10,7 +10,7 @@ import { Service } from '../models/service.model';
   providedIn: 'root'
 })
 export class PromethiumService {
-    private readonly API_URL = 'http://localhost:8000/api';
+  private readonly API_URL = `${environment.apiUrl}/api`;
 
   constructor(private http: HttpClient) { }
 

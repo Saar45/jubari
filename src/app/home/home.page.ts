@@ -69,8 +69,12 @@ export class HomePage {
     this.initializeData();
   }
 
+  /**
+   * Initialize component data with default values
+   */
   private initializeData() {
-    this.userName = ''; // Reset name
+    // Reset all data to initial state
+    this.userName = '';
     this.stats = {
       pendingLeaves: 0,
       approvedLeaves: 0,
@@ -81,42 +85,123 @@ export class HomePage {
     this.loadUserProfile();
   }
 
+  /**
+   * Load current user profile and update UI accordingly
+   */
   private loadUserProfile() {
     const userId = this.authService.getUserId();
-    if (userId) {
-      this.adamantiumService.getCurrentUser(userId).subscribe({
-        next: (user) => {
-          console.log('User profile loaded:', user);
-          
-          if (!user.role && !user.service) {
-            this.isAccountIncomplete = true;
-            this.startLogoutCountdown();
-            return;
-          }
-          
-          this.userProfile = user;
-          this.userName = `${user.prenom} ${user.nom}`;
-          
-          // Update quick actions based on user role
-          if (user.role === 'Administrateur' || user.service?.nom === 'Ressources Humaines') {
-            this.quickActions[1].title = this.quickActions[1].adminTitle as string;
-            this.quickActions[1].path = this.quickActions[1].adminPath as string;
-            this.quickActions[1].disabled = false;
-            delete this.quickActions[1].tooltip;
-          } else {
-            // Ensure regular employee sees "Mes Absences"
-            this.quickActions[1].title = 'Mes Absences';
-            this.quickActions[1].path = '/mes-absences';
-            this.quickActions[1].disabled = true;
-          }
-          
-          this.loadCongeStats(userId);
-        },
-        error: (error) => {
-          console.error('Error loading user profile:', error);
-        }
-      });
+    if (!userId) {
+      this.handleError('User ID not found');
+      return;
     }
+
+    this.adamantiumService.getCurrentUser(userId).subscribe({
+      next: (user) => {
+        // Check if user account is complete
+        if (!user.role && !user.service) {
+          this.handleIncompleteAccount();
+          return;
+        }
+        
+        this.updateUserInterface(user);
+        this.loadCongeStats(userId);
+      },
+      error: (error) => {
+        this.handleError('Failed to load user profile', error);
+      }
+    });
+  }
+
+  /**
+   * Handle incomplete user account scenario
+   */
+  private handleIncompleteAccount() {
+    this.isAccountIncomplete = true;
+    this.startLogoutCountdown();
+  }
+
+  /**
+   * Update UI elements with user data
+   */
+  private updateUserInterface(user: User) {
+    this.userProfile = user;
+    this.userName = `${user.prenom} ${user.nom}`;
+    
+    this.updateQuickActions(user);
+  }
+
+  /**
+   * Update quick actions based on user role
+   */
+  private updateQuickActions(user: User) {
+    const isAdmin = user.role === 'Administrateur' || user.service?.nom === 'Ressources Humaines';
+    
+    if (isAdmin) {
+      this.quickActions[1].title = this.quickActions[1].adminTitle as string;
+      this.quickActions[1].path = this.quickActions[1].adminPath as string;
+      this.quickActions[1].disabled = false;
+      delete this.quickActions[1].tooltip;
+    } else {
+      this.quickActions[1].title = 'Mes Absences';
+      this.quickActions[1].path = '/mes-absences';
+      this.quickActions[1].disabled = true;
+    }
+  }
+
+  /**
+   * Load leave statistics for the current user
+   */
+  private loadCongeStats(userId: number) {
+    this.vibraniumService.getEmployeCongeStats(userId).subscribe({
+      next: (stats) => {
+        this.updateStats(stats);
+        
+        if (this.isAdminUser()) {
+          this.loadEmployeesOnLeave();
+        }
+      },
+      error: (error) => {
+        this.handleError('Failed to load leave statistics', error);
+      }
+    });
+  }
+
+  /**
+   * Update statistics with received data
+   */
+  private updateStats(stats: any) {
+    this.stats.pendingLeaves = stats.en_attente;
+    this.stats.approvedLeaves = stats.accepte;
+  }
+
+  /**
+   * Check if current user is admin or HR
+   */
+  private isAdminUser(): boolean {
+    return this.userProfile?.role === 'Administrateur' || 
+           this.userProfile?.service?.nom === 'Ressources Humaines';
+  }
+
+  /**
+   * Load count of employees currently on leave
+   */
+  private loadEmployeesOnLeave() {
+    this.vibraniumService.getCurrentEmployesOnLeaveCount().subscribe({
+      next: (response) => {
+        this.stats.totalEmployees = response.count;
+      },
+      error: (error) => {
+        this.handleError('Failed to load employees on leave count', error);
+      }
+    });
+  }
+
+  /**
+   * Generic error handler
+   */
+  private handleError(message: string, error?: any) {
+    console.error(message, error);
+    // TODO: Implement proper error handling (e.g., show toast message)
   }
 
   private startLogoutCountdown() {
@@ -127,31 +212,6 @@ export class HomePage {
         this.logout();
       }
     }, 1000);
-  }
-
-  private loadCongeStats(userId: number) {
-    this.vibraniumService.getEmployeCongeStats(userId).subscribe({
-      next: (stats) => {
-        console.log('Stats loaded:', stats);
-        this.stats.pendingLeaves = stats.en_attente;
-        this.stats.approvedLeaves = stats.accepte;
-        
-        // Load employees on leave count if user is administrator
-        if (this.userProfile?.role === 'Administrateur' || this.userProfile?.service?.nom === 'Ressources Humaines') {
-          this.vibraniumService.getCurrentEmployesOnLeaveCount().subscribe({
-            next: (response) => {
-              this.stats.totalEmployees = response.count;
-            },
-            error: (error) => {
-              console.error('Error loading employees on leave count:', error);
-            }
-          });
-        }
-      },
-      error: (error) => {
-        console.error('Error loading conge stats:', error);
-      }
-    });
   }
 
   navigateTo(path: string) {

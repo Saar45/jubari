@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { Employe } from '../models/employe.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdamantiumService {
-  private readonly API_URL = 'http://localhost:8000/api';
+  private readonly API_URL = `${environment.apiUrl}/api`;
 
   constructor(private http: HttpClient) {}
 

@@ -15,18 +15,18 @@
       <h1>Bienvenue</h1>
       <p class="subtitle">Veuillez vous connecter pour continuer</p>
       
-      <form class="login-form">
+      <form [formGroup]="loginForm" class="login-form">
         <div class="input-group">
-          <ion-item lines="none">
+          <ion-item lines="none" [class.ion-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
             <ion-label position="floating">Adresse e-mail</ion-label>
-            <ion-input [(ngModel)]="email" name="email" type="email" required></ion-input>
+            <ion-input formControlName="email" type="email"></ion-input>
           </ion-item>
         </div>
 
         <div class="input-group">
-          <ion-item lines="none">
+          <ion-item lines="none" [class.ion-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
             <ion-label position="floating">Mot de passe</ion-label>
-            <ion-input [(ngModel)]="password" name="password" [type]="passwordType" required></ion-input>
+            <ion-input formControlName="password" [type]="passwordType"></ion-input>
             <ion-icon [name]="passwordType === 'password' ? 'eye-outline' : 'eye-off-outline'"
                       (click)="togglePasswordVisibility()" 
                       class="password-toggle">
@@ -36,7 +36,8 @@
 
         <ion-button expand="block" 
                     class="login-button" 
-                    (click)="login()">
+                    (click)="login()"
+                    [disabled]="loginForm.invalid">
           Se connecter
         </ion-button>
 

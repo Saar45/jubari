@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Conge, CongeStats } from '../models/conge.model';
 import * as moment from 'moment';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VibraniumService {
-  private readonly API_URL = 'http://localhost:8000/api';
+  private readonly API_URL = `${environment.apiUrl}/api`;
 
   constructor(private http: HttpClient) {}
 
