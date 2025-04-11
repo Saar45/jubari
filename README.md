@@ -17,10 +17,21 @@ Jubari est une application web de gestion administrative développée pour Jubar
 ## Installation
 
 ### Prérequis
-- Node.js (v16+)
-- Angular CLI (v16+)
-- Ionic CLI (v7+)
-- MySQL (v8+)
+- Node.js (v16+) :
+```bash
+https://nodejs.org/en/download
+```
+- Angular CLI (v16+) :
+
+```bash
+npm install -g @angular/cli
+```
+- Ionic CLI (v7+) :
+
+```bash
+npm install -g @ionic/cli
+```
+
 
 ### Configuration
 
