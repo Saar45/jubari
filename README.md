@@ -37,38 +37,14 @@ npm install
 
 ### Démarrage
 
-1. Base de données :
-```bash
-# Importer le fichier SQL
-mysql -u root -p jubari < database/jubar_final_version.sql
-```
-
-2. Backend :
-```bash
-# Dans le dossier backend
-cd backend
-composer install
-php -S localhost:8000
-```
-
-3. Application :
+1. Application :
 ```bash
 # Mode développement avec live reload
 ionic serve
-
-# Mode production
-ionic build --prod
-ionic serve --prod
 ```
 
-4. Accès :
-- URL : http://localhost:8100
-- Comptes de test :
-  ```
-  Admin : admin@jubari.com / password
-  RH    : rh@jubari.com / password
-  Chef  : chef@jubari.com / password
-  ```
+2. Accès :
+- URL : http://localhost
 
 ## Architecture
 
