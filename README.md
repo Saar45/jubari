@@ -206,26 +206,6 @@ export class AuthInterceptor implements HttpInterceptor {
 - Weekends exclus du calcul
 - Historique complet conservé
 
-## Déploiement
-
-### Production
-1. Construire l'application :
-```bash
-ionic build --prod
-```
-
-2. Configuration serveur :
-```nginx
-server {
-    listen 80;
-    server_name jubari.example.com;
-    root /var/www/jubari/www;
-    
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-}
-```
 
 ## Support et Maintenance
 
@@ -248,6 +228,5 @@ Cette application offre une solution complète pour la gestion des congés avec 
 - Sécurité renforcée
 
 Pour toute question ou support :
-- Email : support@jubari.com
-- Documentation API : https://api.jubari.com/docs
-- Wiki : https://wiki.jubari.com
+- Email : nabysarr16@gmail.com
+- Documentation API : https://github.com/Saar45/api-jubari
