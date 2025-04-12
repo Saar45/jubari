@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { IonicModule, ModalController, ToastController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { VibraniumService } from '../services/vibranium.service';
@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EditLeaveModalComponent } from './components/edit-leave-modal/edit-leave-modal.component';
+import { AppHeaderComponent } from "../components/app-header/app-header.component";
 
 interface LeaveRequest {
   id: number;
@@ -26,7 +27,7 @@ interface LeaveRequest {
   templateUrl: './historique-conges.page.html',
   styleUrls: ['./historique-conges.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, RouterModule, FormsModule],
+  imports: [IonicModule, CommonModule, RouterModule, FormsModule, AppHeaderComponent],
 })
 export class HistoriqueCongesPage implements OnInit {
   leaveRequests: LeaveRequest[] = [];
@@ -34,82 +35,111 @@ export class HistoriqueCongesPage implements OnInit {
   selectedSegment = 'all';
   searchStartDate: string = '';
   searchEndDate: string = '';
+  isLoading: boolean = true;
+  error: string | null = null;
 
   constructor(
     private vibraniumService: VibraniumService,
     private authService: AuthService,
     private router: Router,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private toastController: ToastController
   ) {}
 
   ngOnInit() {
-    this.loadConges();
+    const userId = this.authService.getUserId();
+    if (userId) {
+      this.loadHistorique(userId);
+    } else {
+      this.handleLoadingError('Impossible de récupérer l\'identifiant utilisateur.');
+    }
   }
 
-  private loadConges() {
-    const userId = this.authService.getUserId();
-    this.vibraniumService.getAllEmployeConges(userId).subscribe((conges) => {
-      this.leaveRequests = conges.map((conge) => ({
-        id: conge.id,
-        type: conge.paye === 1 ? 'Congé payé' : 'Congé sans solde',
-        startDate: conge.dateDebut,
-        endDate: conge.dateFin,
-        status: conge.historiqueConge.etat === 'Refuse' ? 'Rejete' : conge.historiqueConge.etat,
-        reason: conge.description,
-        responseDate: conge.historiqueConge.dateDecision,
-        responseComment: conge.motif_refus,
-        duration: this.calculateDuration(conge.dateDebut, conge.dateFin),
-      }));
-      this.filterRequests(this.selectedSegment);
+  private loadHistorique(userId: number) {
+    this.isLoading = true;
+    this.error = null;
+    this.vibraniumService.getAllEmployeConges(userId).subscribe({
+      next: (conges) => {
+        this.leaveRequests = conges.map((conge) => ({
+          id: conge.id,
+          type: conge.paye === 1 ? 'Congé payé' : 'Congé sans solde',
+          startDate: conge.dateDebut,
+          endDate: conge.dateFin,
+          status: (conge.historiqueConge.etat === 'Refuse' ? 'Rejete' : conge.historiqueConge.etat) as 'Accepte' | 'Rejete' | 'En attente' | 'En attente RH',
+          reason: conge.description,
+          responseDate: conge.historiqueConge.dateDecision,
+          responseComment: conge.motif_refus,
+          duration: this.calculateDuration(conge.dateDebut, conge.dateFin),
+        })).sort((a, b) => moment(b.startDate).diff(moment(a.startDate)));
+        this.isLoading = false;
+        this.applyFilters();
+      },
+      error: (error) => {
+        console.error('Error loading leave history:', error);
+        this.handleLoadingError('Erreur lors du chargement de l\'historique.');
+      }
     });
+  }
+
+  private handleLoadingError(message: string, error?: any) {
+    console.error(message, error);
+    this.error = message;
+    this.isLoading = false;
+  }
+
+  retryLoadData() {
+    const userId = this.authService.getUserId();
+    if (userId) {
+      this.loadHistorique(userId);
+    } else {
+      this.handleLoadingError('Impossible de réessayer: Identifiant utilisateur manquant.');
+    }
   }
 
   segmentChanged(event: any) {
     this.selectedSegment = event.detail.value;
-    this.filterRequests(this.selectedSegment);
+    this.applyFilters();
   }
 
-  private filterRequests(segment: string) {
-    this.filteredRequests = this.getSegmentFilteredRequests(segment);
-    this.filterByDate();
-  }
+  private applyFilters() {
+    let tempFiltered = [...this.leaveRequests];
 
-  private getSegmentFilteredRequests(segment: string): LeaveRequest[] {
-    switch (segment) {
+    switch (this.selectedSegment) {
       case 'approved':
-        return this.leaveRequests.filter(req => req.status === 'Accepte');
+        tempFiltered = tempFiltered.filter(req => req.status === 'Accepte');
+        break;
       case 'waiting':
-        return this.leaveRequests.filter(req => 
+        tempFiltered = tempFiltered.filter(req => 
           req.status === 'En attente' || req.status === 'En attente RH'
         );
-      default:
-        return [...this.leaveRequests];
-    }
-  }
-
-  filterByDate() {
-    if (!this.searchStartDate && !this.searchEndDate) {
-      this.filterRequests(this.selectedSegment);
-      return;
+        break;
     }
 
     const start = this.searchStartDate ? moment(this.searchStartDate) : null;
     const end = this.searchEndDate ? moment(this.searchEndDate) : null;
 
-    const filteredBySegment = this.getSegmentFilteredRequests(this.selectedSegment);
-    this.filteredRequests = filteredBySegment.filter(req => {
-      const leaveStart = moment(req.startDate);
-      const leaveEnd = moment(req.endDate);
-      
-      if (start && end) {
-        return leaveStart.isSameOrAfter(start) && leaveEnd.isSameOrBefore(end);
-      } else if (start) {
-        return leaveStart.isSameOrAfter(start);
-      } else if (end) {
-        return leaveEnd.isSameOrBefore(end);
-      }
-      return true;
-    });
+    if (start || end) {
+      tempFiltered = tempFiltered.filter(req => {
+        const leaveStart = moment(req.startDate);
+        const leaveEnd = moment(req.endDate);
+
+        let match = true;
+        if (start && !leaveStart.isSameOrAfter(start)) {
+          match = false;
+        }
+        if (end && !leaveEnd.isSameOrBefore(end)) {
+          match = false;
+        }
+
+        return match;
+      });
+    }
+
+    this.filteredRequests = tempFiltered;
+  }
+
+  filterByDate() {
+    this.applyFilters();
   }
 
   hasRequestsWithStatus(status: string): boolean {
@@ -164,10 +194,21 @@ export class HistoriqueCongesPage implements OnInit {
 
     modal.onDidDismiss().then((result) => {
       if (result.data?.updated) {
-        this.loadConges();
+        const userId = this.authService.getUserId();
+        if (userId) {
+          this.loadHistorique(userId);
+        }
       }
     });
 
     return await modal.present();
+  }
+
+  doRefresh(event: any) {
+    const userId = this.authService.getUserId();
+    if (userId) {
+      this.loadHistorique(userId);
+    }
+    event.target.complete();
   }
 }
