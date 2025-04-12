@@ -29,12 +29,12 @@ export class SubmitMessageComponent {
     });
   }
 
-  async presentToast(message: string) {
+  async presentToast(message: string, isError: boolean = false) {
     const toast = await this.toastCtrl.create({
       message: message,
       duration: 4000,
       position: 'bottom',
-      color: 'success'
+      color: isError ? 'danger' : 'success'
     });
     await toast.present();
   }
@@ -54,14 +54,18 @@ export class SubmitMessageComponent {
 
       this.promethiumService.newMessage(messageData).subscribe({
         next: async (response) => {
-          console.log('Message sent successfully:', response);
           await this.presentToast('Message envoyé');
           this.modalCtrl.dismiss(response, 'confirm');
         },
         error: (error) => {
-          console.error('Error sending message:', error);
+          this.presentToast(
+            'Erreur: Veuillez réesayer plus tard', 
+            true
+          );
         }
       });
+    } else {
+      this.presentToast('Veuillez remplir correctement le formulaire', true);
     }
     return null;
   }
