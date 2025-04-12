@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar class="app-header-toolbar">
+    <ion-buttons slot="start" *ngIf="showBackButton">
+      <ion-back-button [defaultHref]="defaultHref"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <strong>{{ title }}</strong>
+    </ion-title>
+    <ion-buttons slot="end" *ngIf="showLogoutButton">
+      <ion-button (click)="onLogoutClick()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>

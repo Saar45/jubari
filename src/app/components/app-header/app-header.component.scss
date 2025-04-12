@@ -1,0 +1,23 @@
+.app-header-toolbar {
+  --background: linear-gradient(135deg, var(--jubari-primary), var(--jubari-dark));
+  --color: var(--jubari-white); // Set default text color for the toolbar
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  min-height: 60px; // Ensure a minimum height
+
+  ion-title {
+    font-size: 1.3rem; // Slightly larger title
+    font-weight: 700; // Bolder title
+    letter-spacing: 0.5px;
+    text-align: left; // Align title to the left
+    padding-inline-start: 0; // Remove default title padding
+  }
+
+  ion-buttons {
+    ion-button {
+      --color: var(--jubari-white); // Ensure button icon/text color is white
+    }
+  }
+}
