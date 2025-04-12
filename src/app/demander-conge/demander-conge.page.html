@@ -1,11 +1,8 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Demande de congé</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header 
+  [title]="'Demander un congé'" 
+  [showBackButton]="true"
+  [showLogoutButton]="true">
+</app-header>
 
 <ion-content class="ion-padding">
   <div class="page-container">

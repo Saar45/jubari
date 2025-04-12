@@ -9,6 +9,7 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import localeFr from '@angular/common/locales/fr';
 import * as moment from 'moment';
+import { AppHeaderComponent } from "../components/app-header/app-header.component";
 
 interface LeaveType {
   id: string;
@@ -22,7 +23,7 @@ interface LeaveType {
   templateUrl: './demander-conge.page.html',
   styleUrls: ['./demander-conge.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
+  imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule, RouterModule, AppHeaderComponent],
   providers: [
     { provide: LOCALE_ID, useValue: 'fr-FR' }
   ]
@@ -163,7 +164,7 @@ export class DemanderCongePage implements OnInit {
 
           const toast = await this.toastController.create({
             message: 'Demande soumise avec succès',
-            duration: 3000,
+            duration: 2000,
             position: 'bottom',
             color: 'success',
             buttons: [
