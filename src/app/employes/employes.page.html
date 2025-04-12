@@ -1,27 +1,33 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Liste des Employés</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="addEmployee()">
-        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header 
+  [title]="'Liste des Employés'" 
+  [showBackButton]="true">
+</app-header>
 
 <ion-content>
-  <div class="employee-list">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner></ion-spinner>
+    <p>Chargement des employés...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error-container">
+    <ion-icon name="alert-circle" color="danger" size="large"></ion-icon>
+    <p>{{ error }}</p>
+    <ion-button fill="clear" (click)="retryLoadData()">Réessayer</ion-button>
+  </div>
+
+  <!-- Content -->
+  <div class="employee-list" *ngIf="!isLoading && !error">
     <div class="search-bar">
       <ion-searchbar 
         [(ngModel)]="searchText" 
+        (ionInput)="filterEmployees()" 
         placeholder="Rechercher par nom ou email">
       </ion-searchbar>
     </div>
 
-    <div class="employee-grid">
+    <div class="employee-grid" *ngIf="filteredEmployees.length > 0; else noEmployees">
       <ion-card *ngFor="let employee of filteredEmployees">
         <ion-card-content>
           <div class="employee-header">
@@ -43,7 +49,6 @@
           <div class="employee-details">
             <p><strong>Rôle:</strong> {{employee.role}}</p>
             <p><strong>Service:</strong> {{employee.service?.nom || 'Non assigné'}}</p>
-            <!-- <p *ngIf="employee.serviceDirige"><strong>Service Dirigé:</strong> {{employee.serviceDirige.nom}}</p> -->
           </div>
 
           <div class="action-buttons">
@@ -57,5 +62,13 @@
         </ion-card-content>
       </ion-card>
     </div>
+
+    <!-- Empty state for when filters result in no matches or no initial data -->
+    <ng-template #noEmployees>
+        <div class="empty-state">
+          <ion-icon name="people-outline" size="large"></ion-icon>
+          <p>Aucun employé trouvé.</p>
+        </div>
+    </ng-template>
   </div>
 </ion-content>

@@ -13,8 +13,22 @@ import { PromethiumService } from 'src/app/services/promethium.service';
   imports: [IonicModule, CommonModule, FormsModule]
 })
 export class EmployeeModalComponent implements OnInit {
-  @Input() employee!: Employe;
-  @Input() isNewEmployee: boolean = false;
+  @Input() employeeToEdit!: Employe;
+  
+  employee: Employe = {
+    id: 0,
+    nom: '',
+    prenom: '',
+    email: '',
+    adresse: '',
+    code_postal: '',
+    ville: '',
+    nb_conges_payes: 0,
+    role: '',
+    service: undefined,
+    serviceDirige: undefined
+  };
+  
   services: Service[] = [];
   roles: string[] = ['ADMIN', 'RH', 'CHEF_SERVICE', 'EMPLOYE'];
 
@@ -27,6 +41,12 @@ export class EmployeeModalComponent implements OnInit {
 
   ngOnInit() {
     this.loadServices();
+    
+    // Create a deep copy to avoid modifying the original object
+    this.employee = {...this.employeeToEdit};
+    if (this.employeeToEdit.service) {
+      this.employee.service = {...this.employeeToEdit.service};
+    }
   }
 
   private loadServices() {
@@ -64,25 +84,35 @@ export class EmployeeModalComponent implements OnInit {
   }
 
   async confirm(form: NgForm) {
-    if (!form.valid) {
-      return;
+    // Custom validation only for fields that have values
+    let hasErrors = false;
+    
+    // Only validate email if present
+    if (this.employee.email && this.employee.email.length > 0) {
+      if (!this.isValidEmail(this.employee.email)) {
+        await this.presentToast('Format d\'email invalide');
+        hasErrors = true;
+        return;
+      }
     }
     
-    if (!this.isValidEmail(this.employee.email)) {
-      await this.presentToast('Format d\'email invalide');
+    // Only validate postal code if present
+    if (this.employee.code_postal && this.employee.code_postal.length > 0) {
+      if (!this.isValidPostalCode(this.employee.code_postal)) {
+        await this.presentToast('Code postal invalide (5 chiffres requis)');
+        hasErrors = true;
+        return;
+      }
+    }
+    
+    if (hasErrors) {
       return;
     }
 
-    if (!this.isValidPostalCode(this.employee.code_postal || '')) {
-      await this.presentToast('Code postal invalide (5 chiffres requis)');
-      return;
-    }
-
+    // Continue with confirmation dialog
     const alert = await this.alertCtrl.create({
       header: 'Confirmation',
-      message: this.isNewEmployee ? 
-        'Voulez-vous vraiment ajouter ce nouvel employé ?' :
-        'Voulez-vous vraiment modifier les informations de cet employé ?',
+      message: 'Voulez-vous vraiment modifier les informations de cet employé ?',
       buttons: [
         {
           text: 'Annuler',

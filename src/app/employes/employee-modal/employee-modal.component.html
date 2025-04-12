@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{ isNewEmployee ? 'Ajouter un employé' : 'Modifier l\'employé' }}</ion-title>
+    <ion-title>Modifier l'employé</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="cancel()">Annuler</ion-button>
-      <ion-button (click)="confirmForm.valid && confirm(confirmForm)" [strong]="true" [disabled]="!confirmForm.valid">
+      <ion-button (click)="confirm(confirmForm)" [strong]="true">
         Confirmer
       </ion-button>
     </ion-buttons>
@@ -19,8 +19,8 @@
           label="Nom" 
           [(ngModel)]="employee.nom" 
           name="nom"
-          required
-          minlength="2"
+          [required]="!!employee.nom && employee.nom.length > 0"
+          [minlength]="employee.nom && employee.nom.length > 0 ? 2 : null"
           labelPlacement="stacked"
           #nom="ngModel">
         </ion-input>
@@ -35,8 +35,8 @@
           label="Prénom" 
           [(ngModel)]="employee.prenom" 
           name="prenom"
-          required
-          minlength="2"
+          [required]="!!employee.prenom && employee.prenom.length > 0"
+          [minlength]="employee.prenom && employee.prenom.length > 0 ? 2 : null"
           labelPlacement="stacked"
           #prenom="ngModel">
         </ion-input>
@@ -51,9 +51,9 @@
           label="Email" 
           [(ngModel)]="employee.email" 
           name="email"
-          required
+          [required]="!!employee.email && employee.email.length > 0"
           type="email"
-          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+          [pattern]="employee.email && employee.email.length > 0 ? '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$' : ''"
           labelPlacement="stacked"
           #email="ngModel">
         </ion-input>
@@ -68,7 +68,7 @@
           label="Adresse" 
           [(ngModel)]="employee.adresse" 
           name="adresse"
-          required
+          [required]="!!employee.adresse && employee.adresse.length > 0"
           labelPlacement="stacked"
           #adresse="ngModel">
         </ion-input>
@@ -83,8 +83,8 @@
           label="Code postal" 
           [(ngModel)]="employee.code_postal" 
           name="codePostal"
-          required
-          pattern="[0-9]{5}"
+          [required]="!!employee.code_postal && employee.code_postal.length > 0"
+          [pattern]="employee.code_postal && employee.code_postal.length > 0 ? '[0-9]{5}' : ''"
           labelPlacement="stacked"
           #codePostal="ngModel">
         </ion-input>
@@ -99,7 +99,7 @@
           label="Ville" 
           [(ngModel)]="employee.ville" 
           name="ville"
-          required
+          [required]="!!employee.ville && employee.ville.length > 0"
           labelPlacement="stacked"
           #ville="ngModel">
         </ion-input>
@@ -114,10 +114,10 @@
           label="Balance congés (jours)" 
           [(ngModel)]="employee.nb_conges_payes" 
           name="conges"
-          required
+          [required]="employee.nb_conges_payes !== null && employee.nb_conges_payes !== undefined"
           type="number"
-          min="0"
-          max="25"
+          [min]="employee.nb_conges_payes !== null && employee.nb_conges_payes !== undefined ? 0 : null"
+          [max]="employee.nb_conges_payes !== null && employee.nb_conges_payes !== undefined ? 25 : null"
           labelPlacement="stacked"
           #conges="ngModel">
         </ion-input>
@@ -132,7 +132,7 @@
           label="Rôle" 
           [(ngModel)]="employee.role" 
           name="role"
-          required
+          [required]="!!employee.role && employee.role.length > 0"
           labelPlacement="stacked"
           #role="ngModel">
         </ion-input>
@@ -149,7 +149,7 @@
           [compareWith]="compareWith"
           (ionChange)="onServiceChange($event.detail.value)"
           name="service"
-          required
+          [required]="employee.service !== null && employee.service !== undefined"
           labelPlacement="stacked"
           #serviceField="ngModel">
           <ion-select-option *ngFor="let service of services" [value]="service">
