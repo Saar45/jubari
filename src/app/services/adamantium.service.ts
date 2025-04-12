@@ -23,7 +23,7 @@ export class AdamantiumService {
     return this.http.get<User>(`${this.API_URL}/employe/${id}`, { headers: this.getHeaders() });
   }
 
-  // Get all users (for admin/manager)
+  // Get all users 
   getUsers(): Observable<Employe[]> {
     return this.http.get<Employe[]>(`${this.API_URL}/employes`, { headers: this.getHeaders() });
   }

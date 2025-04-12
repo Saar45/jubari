@@ -106,12 +106,9 @@ export class AuthService {
       .pipe(
         tap(
           response => {
-            console.log('Registration successful:', response);
             
-            // Optional: Auto-login after registration
+            // Auto-login after registration?
             this.login(data.email, data.password).subscribe();
-
-            console.log('Auto-login successful:', response);
             
             return response;
           },
@@ -137,6 +134,7 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
+  //automatically clear user data after 10 minutes of inactivity
   ngOnDestroy(): void {
     if (this.activityCheckTimer) {
       this.activityCheckTimer.unsubscribe();

@@ -62,9 +62,7 @@ export class PromethiumService {
       description: serviceData.description,
       chef_id: serviceData.chef_id ? serviceData.chef_id : null // Pass the value directly without any conversion
     };
-    
-    console.log('Payload:', payload);
-    
+        
 
     return this.http.put<Service>(
       `${this.API_URL}/service`,
@@ -87,7 +85,7 @@ export class PromethiumService {
   }
 
   updateEmployeServiceDirige(employeId: number, serviceId: number): Observable<any> {
-    // First clear any existing chief
+    // First clear serviceId of the previous chief / trigger wouldn't work on sql
     return this.clearPreviousServiceChief(serviceId, employeId).pipe(
       // Then update the new chief
       switchMap(() => {
