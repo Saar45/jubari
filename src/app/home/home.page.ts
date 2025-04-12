@@ -1,4 +1,4 @@
-import { Component, LOCALE_ID } from '@angular/core';
+import { Component, LOCALE_ID, OnInit } from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,6 +11,7 @@ import { AdamantiumService } from '../services/adamantium.service';
 import { VibraniumService } from '../services/vibranium.service';
 import { User } from '../models/user.model';
 import localeFr from '@angular/common/locales/fr';
+import { AppHeaderComponent } from '../components/app-header/app-header.component';
 
 registerLocaleData(localeFr);
 
@@ -19,12 +20,18 @@ registerLocaleData(localeFr);
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, RouterModule],
+  imports: [
+    IonicModule, 
+    CommonModule, 
+    FormsModule, 
+    RouterModule, 
+    AppHeaderComponent
+  ],
   providers: [
     { provide: LOCALE_ID, useValue: 'fr-FR' }
   ]
 })
-export class HomePage {
+export class HomePage implements OnInit {
   today: Date = new Date();
   userName: string = 'John Doe';
   stats = {
@@ -53,6 +60,8 @@ export class HomePage {
   userProfile?: User;
   isAccountIncomplete: boolean = false;
   countdownSeconds: number = 10;
+  isLoading: boolean = true; // Add isLoading state
+  error: string | null = null; // Add error state
 
   constructor(
     private router: Router,
@@ -64,23 +73,27 @@ export class HomePage {
     // Check authentication status before loading anything
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/login']);
-      return;
     }
-    this.initializeData();
+  }
+
+  ngOnInit(): void {
+    // Load data only if authenticated
+    if (this.authService.isAuthenticated()) {
+      this.loadInitialData();
+    } else {
+      this.isLoading = false;
+      this.error = "Utilisateur non authentifié.";
+    }
   }
 
   /**
-   * Initialize component data with default values
+   * Renamed from initializeData for clarity
    */
-  private initializeData() {
-    // Reset all data to initial state
+  private loadInitialData() {
+    this.isLoading = true;
+    this.error = null;
     this.userName = '';
-    this.stats = {
-      pendingLeaves: 0,
-      approvedLeaves: 0,
-      totalEmployees: 0,
-      upcomingEvents: 0
-    };
+    this.stats = { pendingLeaves: 0, approvedLeaves: 0, totalEmployees: 0, upcomingEvents: 0 };
     this.userProfile = undefined;
     this.loadUserProfile();
   }
@@ -91,13 +104,12 @@ export class HomePage {
   private loadUserProfile() {
     const userId = this.authService.getUserId();
     if (!userId) {
-      this.handleError('User ID not found');
+      this.handleLoadingError('Erreur de chargement de l\'utilisateur');
       return;
     }
 
     this.adamantiumService.getCurrentUser(userId).subscribe({
       next: (user) => {
-        // Check if user account is complete
         if (!user.role && !user.service) {
           this.handleIncompleteAccount();
           return;
@@ -107,7 +119,7 @@ export class HomePage {
         this.loadCongeStats(userId);
       },
       error: (error) => {
-        this.handleError('Failed to load user profile', error);
+        this.handleLoadingError('Erreur lors de chargement du profile de l\'utilisateur', error);
       }
     });
   }
@@ -117,6 +129,8 @@ export class HomePage {
    */
   private handleIncompleteAccount() {
     this.isAccountIncomplete = true;
+    this.isLoading = false;
+    this.error = null;
     this.startLogoutCountdown();
   }
 
@@ -126,7 +140,6 @@ export class HomePage {
   private updateUserInterface(user: User) {
     this.userProfile = user;
     this.userName = `${user.prenom} ${user.nom}`;
-    
     this.updateQuickActions(user);
   }
 
@@ -158,10 +171,13 @@ export class HomePage {
         
         if (this.isAdminUser()) {
           this.loadEmployeesOnLeave();
+        } else {
+          this.isLoading = false;
+          this.error = null;
         }
       },
-      error: (error) => {
-        this.handleError('Failed to load leave statistics', error);
+      error: () => {
+        this.isLoading = false;
       }
     });
   }
@@ -189,19 +205,22 @@ export class HomePage {
     this.vibraniumService.getCurrentEmployesOnLeaveCount().subscribe({
       next: (response) => {
         this.stats.totalEmployees = response.count;
+        this.isLoading = false;
+        this.error = null;
       },
-      error: (error) => {
-        this.handleError('Failed to load employees on leave count', error);
+      error: () => {
+        this.isLoading = false;
       }
     });
   }
 
   /**
-   * Generic error handler
+   * Generic error handler for loading state
    */
-  private handleError(message: string, error?: any) {
+  private handleLoadingError(message: string, error?: any) {
     console.error(message, error);
-    // TODO: Implement proper error handling (e.g., show toast message)
+    this.error = message;
+    this.isLoading = false;
   }
 
   private startLogoutCountdown() {
@@ -214,23 +233,13 @@ export class HomePage {
     }, 1000);
   }
 
-  navigateTo(path: string) {
-    this.router.navigate([path]);
-  }
-
-  logout() {
-    // Clear component data first
-    this.userName = '';
-    this.userProfile = undefined;
-    this.stats = {
-      pendingLeaves: 0,
-      approvedLeaves: 0,
-      totalEmployees: 0,
-      upcomingEvents: 0
-    };
-    // Then logout
+  private logout() {
     this.authService.logout();
     this.router.navigate(['/login'], { replaceUrl: true });
+  }
+
+  navigateTo(path: string) {
+    this.router.navigate([path]);
   }
 
   async openSubmitMessage() {
@@ -243,8 +252,7 @@ export class HomePage {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      console.log('Message submitted:', data);
-      // Implement submission logic
+      console.log('Success');
     }
   }
 
@@ -265,8 +273,11 @@ export class HomePage {
   }
 
   async contactAdmin() {
-    // Open mail app with admin email
-    const adminEmail = 'admin@example.com'; // Replace with actual admin email
+    const adminEmail = 'admin@example.com';
     window.location.href = `mailto:${adminEmail}?subject=Contact%20Administration`;
+  }
+
+  retryLoadData() {
+    this.loadInitialData();
   }
 }
