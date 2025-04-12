@@ -2,10 +2,10 @@ import { Service } from './service.model';
 
 export interface Employe {
     id: number;
-    email: string;
-    nom: string;
-    prenom: string;
-    role: string;
+    email?: string;
+    nom?: string;
+    prenom?: string;
+    role?: string;
     service?: Service;
     serviceDirige?: Service;
     adresse?: string;

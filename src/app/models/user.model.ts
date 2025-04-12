@@ -7,6 +7,7 @@ export interface User {
     prenom: string;
     role: string;
     service?: Service;
+    serviceDirige?: Service;
     password?: string;
     oldPassword?: string;
 }
