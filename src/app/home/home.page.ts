@@ -86,9 +86,7 @@ export class HomePage implements OnInit {
     }
   }
 
-  /**
-   * Renamed from initializeData for clarity
-   */
+ //initial data
   private loadInitialData() {
     this.isLoading = true;
     this.error = null;
@@ -99,7 +97,7 @@ export class HomePage implements OnInit {
   }
 
   /**
-   * Load current user profile and update UI accordingly
+   * Load current user profile 
    */
   private loadUserProfile() {
     const userId = this.authService.getUserId();
@@ -134,9 +132,6 @@ export class HomePage implements OnInit {
     this.startLogoutCountdown();
   }
 
-  /**
-   * Update UI elements with user data
-   */
   private updateUserInterface(user: User) {
     this.userProfile = user;
     this.userName = `${user.prenom} ${user.nom}`;
@@ -162,7 +157,7 @@ export class HomePage implements OnInit {
   }
 
   /**
-   * Load leave statistics for the current user
+   * Load conge statistics for the current user
    */
   private loadCongeStats(userId: number) {
     this.vibraniumService.getEmployeCongeStats(userId).subscribe({
@@ -182,9 +177,7 @@ export class HomePage implements OnInit {
     });
   }
 
-  /**
-   * Update statistics with received data
-   */
+
   private updateStats(stats: any) {
     this.stats.pendingLeaves = stats.en_attente;
     this.stats.approvedLeaves = stats.accepte;
@@ -198,9 +191,7 @@ export class HomePage implements OnInit {
            this.userProfile?.service?.nom === 'Ressources Humaines';
   }
 
-  /**
-   * Load count of employees currently on leave
-   */
+
   private loadEmployeesOnLeave() {
     this.vibraniumService.getCurrentEmployesOnLeaveCount().subscribe({
       next: (response) => {
@@ -218,7 +209,6 @@ export class HomePage implements OnInit {
    * Generic error handler for loading state
    */
   private handleLoadingError(message: string, error?: any) {
-    console.error(message, error);
     this.error = message;
     this.isLoading = false;
   }

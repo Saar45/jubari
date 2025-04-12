@@ -33,7 +33,6 @@ export class LoginPage {
     });
   }
 
-  // Toggle password visibility between text and password
   togglePasswordVisibility(): void {
     this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
   }
@@ -89,9 +88,6 @@ export class LoginPage {
     }
   }
 
-  /**
-   * Opens the registration modal
-   */
   async openRegisterModal(): Promise<void> {
     const modal = await this.modalCtrl.create({
       component: RegisterModal
@@ -109,9 +105,7 @@ export class LoginPage {
    */
   async forgotPassword(): Promise<void> {
     if (this.isLoading) return;
-    console.log('Forgot password clicked');
-    // Implement forgot password logic here (e.g., open modal, navigate, call service)
-    // Example: Show a simple alert
+    // Implement later
     const email = this.loginForm.get('email')?.value;
     const alert = await this.alertCtrl.create({
       header: 'Mot de passe oublié',
@@ -122,9 +116,6 @@ export class LoginPage {
     
   }
 
-  /**
-   * Helper method to show alert messages
-   */
   private async showAlert(header: string, message: string): Promise<void> {
     const alert = await this.alertCtrl.create({
       header,

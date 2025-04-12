@@ -31,7 +31,6 @@ export class CongesEnCoursPage implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading current leaves:', error);
         this.error = 'Impossible de charger les congés en cours';
         this.isLoading = false;
       }

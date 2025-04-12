@@ -433,7 +433,6 @@ export class RegisterModal {
       this.modalCtrl.dismiss({ registered: true });
     } catch (error) {
       this.isLoading = false;
-      console.error('Registration error:', error);
       const message = this.getErrorMessage(error);
       await this.showAlert('Erreur d\'inscription', message);
     }

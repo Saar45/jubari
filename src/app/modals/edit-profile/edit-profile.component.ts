@@ -173,7 +173,6 @@ export class EditProfileComponent implements OnInit {
         await this.showToast('Mis à jour réussie', 'success');
         this.dismiss(true);
       } catch (error: any) {
-        console.error('Error updating profile:', error);
         await this.showToast(error?.error?.messages?.error || 'Erreur lors de la mise à jour', 'danger');
       }
     }
@@ -190,7 +189,6 @@ export class EditProfileComponent implements OnInit {
         await this.showToast('Mis à jour réussie', 'success');
         this.dismiss(true);
       } catch (error: any) {
-        console.error('Error updating password:', error);
         await this.showToast(error?.error?.messages?.error || 'Erreur lors de la mise à jour', 'danger');
       }
     }
