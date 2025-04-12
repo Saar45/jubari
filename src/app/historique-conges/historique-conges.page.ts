@@ -30,11 +30,16 @@ interface LeaveRequest {
   imports: [IonicModule, CommonModule, RouterModule, FormsModule, AppHeaderComponent],
 })
 export class HistoriqueCongesPage implements OnInit {
+  // Array to store all leave requests
   leaveRequests: LeaveRequest[] = [];
+  // Array to store filtered leave requests based on user selection
   filteredRequests: LeaveRequest[] = [];
+  // Default segment selection for filtering
   selectedSegment = 'all';
+  // Date fields for filtering by date range
   searchStartDate: string = '';
   searchEndDate: string = '';
+
   isLoading: boolean = true;
   error: string | null = null;
 
@@ -45,6 +50,7 @@ export class HistoriqueCongesPage implements OnInit {
     private modalController: ModalController,
     private toastController: ToastController
   ) {}
+
 
   ngOnInit() {
     const userId = this.authService.getUserId();
@@ -60,6 +66,7 @@ export class HistoriqueCongesPage implements OnInit {
     this.error = null;
     this.vibraniumService.getAllEmployeConges(userId).subscribe({
       next: (conges) => {
+        // Transform API data into our LeaveRequest interface format
         this.leaveRequests = conges.map((conge) => ({
           id: conge.id,
           type: conge.paye === 1 ? 'Congé payé' : 'Congé sans solde',
@@ -70,7 +77,7 @@ export class HistoriqueCongesPage implements OnInit {
           responseDate: conge.historiqueConge.dateDecision,
           responseComment: conge.motif_refus,
           duration: this.calculateDuration(conge.dateDebut, conge.dateFin),
-        })).sort((a, b) => moment(b.startDate).diff(moment(a.startDate)));
+        })).sort((a, b) => moment(b.startDate).diff(moment(a.startDate))); // Sort by date, most recent first
         this.isLoading = false;
         this.applyFilters();
       },
@@ -81,12 +88,16 @@ export class HistoriqueCongesPage implements OnInit {
     });
   }
 
+
   private handleLoadingError(message: string, error?: any) {
     console.error(message, error);
     this.error = message;
     this.isLoading = false;
   }
 
+  /**
+   * Retry loading data after an error occurs
+   */
   retryLoadData() {
     const userId = this.authService.getUserId();
     if (userId) {
@@ -101,6 +112,7 @@ export class HistoriqueCongesPage implements OnInit {
     this.applyFilters();
   }
 
+ //Filters by selected segment et date
   private applyFilters() {
     let tempFiltered = [...this.leaveRequests];
 
@@ -115,6 +127,7 @@ export class HistoriqueCongesPage implements OnInit {
         break;
     }
 
+    // Filter by date range if provided
     const start = this.searchStartDate ? moment(this.searchStartDate) : null;
     const end = this.searchEndDate ? moment(this.searchEndDate) : null;
 
@@ -138,9 +151,11 @@ export class HistoriqueCongesPage implements OnInit {
     this.filteredRequests = tempFiltered;
   }
 
+  
   filterByDate() {
     this.applyFilters();
   }
+
 
   hasRequestsWithStatus(status: string): boolean {
     switch (status) {
@@ -155,6 +170,7 @@ export class HistoriqueCongesPage implements OnInit {
     }
   }
 
+//calcul duration of conge
   private calculateDuration(startDate: string, endDate: string): number {
     const start = moment(startDate, 'YYYY-MM-DD');
     const end = moment(endDate, 'YYYY-MM-DD');
@@ -175,6 +191,7 @@ export class HistoriqueCongesPage implements OnInit {
     return status;
   }
 
+ //Cannot edit conge if it start in less than 7 jours
   canEditLeave(leave: LeaveRequest): boolean {
     const startDate = moment(leave.startDate);
     const today = moment();
@@ -182,6 +199,7 @@ export class HistoriqueCongesPage implements OnInit {
     
     return leave.status === 'En attente' && daysUntilStart >= 7;
   }
+
 
   async editLeave(leave: LeaveRequest) {
     const modal = await this.modalController.create({
@@ -192,6 +210,7 @@ export class HistoriqueCongesPage implements OnInit {
       cssClass: 'leave-edit-modal'
     });
 
+    // Reload data if the leave was updated
     modal.onDidDismiss().then((result) => {
       if (result.data?.updated) {
         const userId = this.authService.getUserId();
@@ -204,6 +223,7 @@ export class HistoriqueCongesPage implements OnInit {
     return await modal.present();
   }
 
+ // Refresh the page
   doRefresh(event: any) {
     const userId = this.authService.getUserId();
     if (userId) {

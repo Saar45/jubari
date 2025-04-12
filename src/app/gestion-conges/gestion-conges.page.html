@@ -138,7 +138,6 @@
       </ion-card>
     </div>
 
-    <!-- Empty state for when filters result in no matches or no initial data -->
     <ng-template #noRequests>
         <div class="empty-state">
           <ion-icon name="file-tray-outline" size="large"></ion-icon>
@@ -147,7 +146,6 @@
     </ng-template>
   </div>
 
-  <!-- Optional: Message if user lands here but has no permission (though redirect is primary) -->
   <div *ngIf="!isLoading && !error && !(currentUser?.serviceDirige || (currentUser && isHR(currentUser)))" class="error-container">
       <ion-icon name="lock-closed-outline" color="warning" size="large"></ion-icon>
       <p>Accès non autorisé.</p>

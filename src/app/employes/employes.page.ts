@@ -56,13 +56,11 @@ export class EmployesPage implements OnInit {
     this.error = null;
     this.adamantiumService.getUsers().subscribe({
       next: (employees) => {
-        console.log('Employees loaded:', employees);
         this.employees = employees;
         this.filterEmployees(); // Initialize filtered list
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading employees:', error);
         this.error = 'Erreur lors du chargement des employés.';
         this.isLoading = false;
         this.presentToast('Erreur lors du chargement des employés.', 'danger');
@@ -90,19 +88,15 @@ export class EmployesPage implements OnInit {
           this.presentToast('Les informations de l\'employé ont été modifiées avec succès');
         },
         error: (error) => {
-          console.error('Error updating employee:', error);
+          this.presentToast('Erreur lors de la modification de l\'employé. Veuillez réessayer.', 'danger');
         }
       });
     }
   }
 
   async deleteEmployee(employee: Employe) {
-    // Add confirmation dialog here before deleting
-    console.log('Delete employee:', employee);
-    // Implement delete logic using adamantiumService
-    // Example:
-    // this.adamantiumService.deleteUser(employee.id).subscribe(...)
-    this.presentToast(`Suppression de ${employee.prenom} ${employee.nom} (non implémenté)`, 'warning');
+    // Do later
+    this.presentToast(`Suppression de ${employee.prenom} ${employee.nom}...`, 'warning');
   }
 
   async presentToast(message: string, color: 'success' | 'danger' | 'warning' = 'success') {

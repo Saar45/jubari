@@ -6,7 +6,6 @@
 
 <ion-content class="ion-padding">
   <div class="page-container">
-    <!-- Leave Balance Summary -->
     <ion-card class="balance-card">
       <ion-card-content>
         <div class="balance-grid">
@@ -17,18 +16,10 @@
               <span class="balance-label">Jours disponibles</span>
             </div>
           </div>
-          <!-- <div class="balance-item">
-            <ion-icon name="medical-outline" color="danger"></ion-icon>
-            <div class="balance-info">
-              <span class="balance-value">{{leaveBalance.sickLeave}}</span>
-              <span class="balance-label">Congé maladie</span>
-            </div>
-          </div> -->
         </div>
       </ion-card-content>
     </ion-card>
 
-    <!-- Leave Request Form -->
     <ion-card class="form-card">
       <ion-card-header>
         <ion-card-title>Nouvelle demande</ion-card-title>
@@ -36,7 +27,6 @@
       <ion-card-content>
         <form [formGroup]="leaveForm" (ngSubmit)="submitLeaveRequest()">
           <ion-list>
-            <!-- Hidden input for leave type -->
             <input type="hidden" formControlName="type" value="1">
 
             <div class="date-grid">
@@ -62,7 +52,6 @@
               </ion-textarea>
             </ion-item>
 
-            <!-- Attachment item removed -->
 
           </ion-list>
 
@@ -85,9 +74,6 @@
             <ion-icon slot="start" name="time-outline" color="warning"></ion-icon>
             <ion-label>Délai de traitement : 48h</ion-label>
           </ion-item>
-          <!-- <ion-item lines="none">
-            <ion-icon slot="start" name="document-outline" color="medium"></ion-icon>
-            <ion-label>Justificatif requis pour +3 jours</ion-item> -->
         </ion-list>
       </ion-card-content>
     </ion-card>

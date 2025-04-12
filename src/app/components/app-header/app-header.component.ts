@@ -23,13 +23,10 @@ export class AppHeaderComponent {
   ) {}
 
   onLogoutClick() {
-    // Call the logout method directly
     this.logout();
   }
 
-  // Add the logout logic here
   logout() {
-    // Note: We don't clear component-specific data here as it's handled by page navigation/reinitialization
     this.authService.logout();
     this.router.navigate(['/login'], { replaceUrl: true });
   }

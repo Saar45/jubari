@@ -54,7 +54,6 @@ export class GestionCongesPage implements OnInit {
     this.adamantiumService.getUserById(userId).subscribe({
       next: (user: Employe) => {
         this.currentUser = user;
-        console.log('Current user:', user);
 
         if (!user.serviceDirige && !this.isHR(user)) {
           this.presentAccessDeniedToast();
@@ -62,10 +61,8 @@ export class GestionCongesPage implements OnInit {
           this.router.navigate(['/home']);
         } else {
           if (this.isHR(user)) {
-            console.log('User is HR or Admin, loading relevant conges.');
             this.loadAllConges(); // This will handle isLoading = false on completion/error
           } else if (user.serviceDirige) {
-            console.log(`User is manager of service ${user.serviceDirige.id}, loading service conges.`);
             this.loadServiceConges(user.serviceDirige.id); // This will handle isLoading = false on completion/error
           } else {
             this.handleLoadingError('Configuration utilisateur invalide.');
@@ -95,13 +92,11 @@ export class GestionCongesPage implements OnInit {
   loadServiceConges(serviceId: number) {
     this.vibraniumService.getCongesByService(serviceId).subscribe({
       next: (conges: Conge[]) => {
-        console.log('Conges for service:', serviceId, conges);
 
         this.leaveRequests = conges.filter(conge =>
           conge.historiqueConge?.etat === 'En attente' &&
           conge.employe.id !== this.currentUser?.id
         );
-        console.log('Filtered Conges for Manager:', this.leaveRequests);
         this.filterLeaveRequests();
         this.isLoading = false; // Loading complete
         this.error = null;
@@ -128,13 +123,11 @@ export class GestionCongesPage implements OnInit {
           this.leaveRequests = conges.filter(conge =>
             relevantStatuses.includes(conge.historiqueConge?.etat)
           );
-          console.log('Filtered Conges for Admin/HR Manager:', this.leaveRequests);
         } else {
           this.leaveRequests = conges.filter(conge =>
             conge.employe.id !== this.currentUser?.id &&
             relevantStatuses.includes(conge.historiqueConge?.etat)
           );
-          console.log('Filtered Conges for regular HR:', this.leaveRequests);
         }
 
         this.filterLeaveRequests();
@@ -148,7 +141,6 @@ export class GestionCongesPage implements OnInit {
   }
 
   private handleLoadingError(message: string, error?: any) {
-    console.error(message, error);
     this.error = message;
     this.isLoading = false;
   }
@@ -199,7 +191,6 @@ export class GestionCongesPage implements OnInit {
 
       this.loadServiceConges(this.currentUser?.serviceDirige?.id || 0);
     } catch (error) {
-      console.error('Error approving leave:', error);
       const toast = await this.toastController.create({
         message: 'Erreur lors de l\'approbation',
         duration: 4000,
@@ -254,7 +245,6 @@ export class GestionCongesPage implements OnInit {
 
                 this.loadServiceConges(this.currentUser?.serviceDirige?.id || 0);
               } catch (error) {
-                console.error('Error denying leave:', error);
                 const toast = await this.toastController.create({
                   message: 'Erreur lors du refus',
                   duration: 4000,
@@ -314,7 +304,6 @@ export class GestionCongesPage implements OnInit {
 
       this.loadAllConges();
     } catch (error) {
-      console.error('Error approving leave:', error);
       const toast = await this.toastController.create({
         message: 'Erreur lors de l\'approbation',
         duration: 4000,
@@ -355,7 +344,7 @@ export class GestionCongesPage implements OnInit {
                   date_decision_rh: moment().format('YYYY-MM-DD'),
                   motif_refus: data.motif
                 };
-
+                // Edit both data in v_conge and v_historique_conge
                 await this.vibraniumService.priseDecisionRH(leave.id, decisionData).toPromise();
                 await this.vibraniumService.statutConge(
                   leave.historiqueConge.id,
@@ -373,7 +362,6 @@ export class GestionCongesPage implements OnInit {
 
                 this.loadAllConges();
               } catch (error) {
-                console.error('Error denying leave:', error);
                 const toast = await this.toastController.create({
                   message: 'Erreur lors du refus',
                   duration: 4000,

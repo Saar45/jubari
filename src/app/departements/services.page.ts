@@ -24,6 +24,7 @@ export class ServicesPage implements OnInit {
     private modalCtrl: ModalController
   ) {}
 
+  //loaad services when the page is initialized
   ngOnInit() {
     this.loadServices();
   }
@@ -37,7 +38,6 @@ export class ServicesPage implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error(error);
         this.error = 'Impossible de charger les services.';
         this.isLoading = false;
       }

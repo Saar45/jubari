@@ -79,8 +79,7 @@ export class DemanderCongePage implements OnInit {
     const userId = this.authService.getUserId();
     this.vibraniumService.getEmployeCongeStats(userId).subscribe({
       next: (stats) => {
-        console.log('Leave balance:', stats);
-        this.leaveBalance.remainingDays = stats.joursRestants; // Fixed: joursRestant -> joursRestants
+        this.leaveBalance.remainingDays = stats.joursRestants; 
       },
       error: (error) => {
         console.error('Error loading leave balance:', error);
@@ -89,7 +88,7 @@ export class DemanderCongePage implements OnInit {
   }
 
   calculateDefaultStartDate(): string {
-    let date = moment().add(7, 'days'); // Changed from 21 to 7 days
+    let date = moment().add(7, 'days'); // Demande de congé 7 jours à l'avance
     // Skip to next working day if it's a weekend
     while (this.isWeekend(date)) {
       date = date.add(1, 'day');
@@ -108,7 +107,7 @@ export class DemanderCongePage implements OnInit {
 
   isWeekend(date: moment.Moment): boolean {
     const day = date.day();
-    return day === 0 || day === 6; // 0 is Sunday, 6 is Saturday
+    return day === 0 || day === 6; // 0 is Dimanche, 6 is Samedi
   }
 
   isWorkingDay = (dateString: string) => {
@@ -150,7 +149,6 @@ export class DemanderCongePage implements OnInit {
 
       this.vibraniumService.createConge(userId, congeData).subscribe({
         next: async (response) => {
-          console.log('Leave request submitted successfully:', response);
           
           // Reset form to initial state
           const defaultStartDate = this.calculateDefaultStartDate();
@@ -190,6 +188,8 @@ export class DemanderCongePage implements OnInit {
       });
     }
   }
+
+  /// Getters for form controls
 
   get endDateControl(): FormControl {
     return this.leaveForm.controls['endDate'] as FormControl;

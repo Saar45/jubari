@@ -32,7 +32,6 @@ export class AddServiceModalComponent implements OnInit {
   ngOnInit() {
     if (this.service) {
       this.loadEmployees();
-      console.log('Service received:', this.service); // Debug line
       this.serviceForm.patchValue({
         description: this.service.nom || this.service.description, // Try both properties
         chef_id: this.service.chef?.id

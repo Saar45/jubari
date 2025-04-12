@@ -55,7 +55,6 @@ export class EmployeeModalComponent implements OnInit {
         this.services = services;
       },
       error: (error) => {
-        console.error('Error loading services:', error);
       }
     });
   }

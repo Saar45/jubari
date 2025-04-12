@@ -62,7 +62,6 @@ export class EditLeaveModalComponent implements OnInit {
   async submitEdit() {
     if (this.editForm.valid) {
       const formValues = this.editForm.value;
-      console.log('Congé ID:', this.leave.id);
       
       const updatedData = {
         id: this.leave.id,
@@ -73,7 +72,6 @@ export class EditLeaveModalComponent implements OnInit {
       };
 
       try {
-        console.log('Sending update with data:', updatedData);
         await this.vibraniumService.updateConge(this.leave.id, updatedData).toPromise();
         
         const toast = await this.toastController.create({
@@ -93,7 +91,21 @@ export class EditLeaveModalComponent implements OnInit {
         
         this.dismiss({ updated: true });
       } catch (error) {
-        console.error('Error updating leave:', error);
+        
+        const errorToast = await this.toastController.create({
+          message: 'Erreur lors de la modification du congé. Veuillez réessayer.',
+          duration: 4000,
+          position: 'bottom',
+          color: 'danger',
+          buttons: [
+            {
+              icon: 'close-circle',
+              text: 'Fermer',
+              role: 'cancel'
+            }
+          ]
+        });
+        await errorToast.present();
       }
     }
   }
