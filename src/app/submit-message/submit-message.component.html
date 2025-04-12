@@ -1,39 +1,49 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar>
+  <ion-toolbar class="submit-message-toolbar">
     <ion-title>Soumettre une alerte</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="cancel()">
-        <ion-icon name="close-outline"></ion-icon>
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <form [formGroup]="messageForm" (ngSubmit)="submit()">
-    <div class="form-content">
+<ion-content>
+  <form [formGroup]="messageForm" (ngSubmit)="submit()" class="submit-message-form">
+    <div class="form-content ion-padding">
 
-      <ion-item>
+      <ion-item lines="none" class="input-item">
         <ion-label position="stacked">Description</ion-label>
         <ion-textarea
           formControlName="description"
-          placeholder="Décrivez votre message"
+          placeholder="Décrivez votre message ici..."
           [counter]="true"
           [maxlength]="250"
-          [rows]="6">
+          [rows]="8"
+          class="custom-textarea">
         </ion-textarea>
+        <ion-note slot="error" *ngIf="messageForm.get('description')?.invalid && messageForm.get('description')?.touched">
+          La description est requise (minimum 10 caractères).
+        </ion-note>
       </ion-item>
 
-      <div class="button-group">
-        <ion-button fill="clear" (click)="cancel()">
-          Annuler
-        </ion-button>
-        <ion-button 
-          type="submit"
-          [disabled]="!messageForm.valid">
-          Envoyer
-        </ion-button>
-      </div>
     </div>
+    <ion-footer class="ion-no-border">
+        <ion-toolbar class="button-toolbar">
+            <ion-button fill="clear" (click)="cancel()" color="medium">
+              Annuler
+            </ion-button>
+            <ion-button
+              slot="end"
+              type="submit"
+              [disabled]="!messageForm.valid"
+              color="primary"
+              shape="round">
+              Envoyer
+              <ion-icon slot="end" name="send-outline"></ion-icon>
+            </ion-button>
+        </ion-toolbar>
+    </ion-footer>
   </form>
 </ion-content>

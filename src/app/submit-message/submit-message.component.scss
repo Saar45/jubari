@@ -1,13 +1,38 @@
+.submit-message-toolbar {
+  --background: linear-gradient(135deg, var(--jubari-primary), var(--jubari-dark));
+  --color: var(--jubari-white);
+
+  ion-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  ion-button {
+    --color: var(--jubari-white);
+  }
+}
+
+ion-content {
+  --background: #f5f7fa;
+}
+
+.submit-message-form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .form-content {
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 16px;
+  flex-grow: 1;
 
   ion-item {
     --background: white;
     --border-radius: 8px;
     margin-bottom: 16px;
-    
+
     ion-label {
       color: black;
       font-weight: 500;
@@ -24,9 +49,63 @@
   }
 }
 
+.input-item {
+  --background: var(--jubari-white);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  --border-radius: 12px;
+  --inner-padding-bottom: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 16px;
+
+  ion-label {
+    color: var(--ion-color-medium);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .custom-textarea {
+    --padding-start: 0;
+    --padding-end: 0;
+    --padding-top: 4px;
+    --padding-bottom: 4px;
+    background-color: transparent;
+    color: var(--jubari-dark);
+    margin-top: 4px;
+  }
+
+  ion-note[slot="error"] {
+    padding-top: 6px;
+    font-size: 0.8em;
+  }
+}
+
 .button-group {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
   margin-top: 24px;
+}
+
+ion-footer {
+  .button-toolbar {
+    --background: var(--jubari-white);
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+
+    ion-button {
+      font-weight: 600;
+      text-transform: none;
+    }
+
+    ion-button[shape="round"] {
+      --border-radius: 20px;
+    }
+  }
 }
