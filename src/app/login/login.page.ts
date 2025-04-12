@@ -17,6 +17,8 @@ export class LoginPage {
   loginForm: FormGroup;
   passwordType: string = 'password';
   isLoading: boolean = false;
+  isEmailFocused: boolean = false;
+  isPasswordFocused: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -34,6 +36,22 @@ export class LoginPage {
   // Toggle password visibility between text and password
   togglePasswordVisibility(): void {
     this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
+  }
+
+  onEmailFocus() {
+    this.isEmailFocused = true;
+  }
+
+  onEmailBlur() {
+    this.isEmailFocused = false;
+  }
+
+  onPasswordFocus() {
+    this.isPasswordFocused = true;
+  }
+
+  onPasswordBlur() {
+    this.isPasswordFocused = false;
   }
 
   /**
@@ -87,6 +105,24 @@ export class LoginPage {
   }
 
   /**
+   * Placeholder for forgot password functionality
+   */
+  async forgotPassword(): Promise<void> {
+    if (this.isLoading) return;
+    console.log('Forgot password clicked');
+    // Implement forgot password logic here (e.g., open modal, navigate, call service)
+    // Example: Show a simple alert
+    const email = this.loginForm.get('email')?.value;
+    const alert = await this.alertCtrl.create({
+      header: 'Mot de passe oublié',
+      message: email ? `Un e-mail de réinitialisation sera envoyé à ${email} si ce compte existe.` : 'Veuillez entrer votre adresse e-mail d\'abord.',
+      buttons: ['OK']
+    });
+    await alert.present();
+    
+  }
+
+  /**
    * Helper method to show alert messages
    */
   private async showAlert(header: string, message: string): Promise<void> {
@@ -97,28 +133,4 @@ export class LoginPage {
     });
     await alert.present();
   }
-
-  /**
-   * Maps error objects to user-friendly messages
-   */
-  private getErrorMessage(error: any): string {
-    if (error?.code === 'auth/wrong-password') {
-      return 'Mot de passe incorrect';
-    }
-    if (error?.code === 'auth/user-not-found') {
-      return 'Aucun compte trouvé avec cette adresse email';
-    }
-    if (error?.code === 'auth/invalid-email') {
-      return 'Adresse email invalide';
-    }
-    return 'Une erreur est survenue. Veuillez réessayer.';
-  }
-
-  /**
-   * Resets form fields
-   */
-  /*private resetForm(): void {
-    this.email = '';
-    this.password = '';
-  }*/
 }

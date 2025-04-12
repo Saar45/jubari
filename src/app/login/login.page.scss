@@ -1,206 +1,359 @@
 ion-content {
-  --background: var(--jubari-white);
+  --background: #f5f7fa !important;  
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
 }
 
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
 .login-wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  min-height: 100%;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  width: 100%;
+  height: 100%;
+  align-items: stretch;
 }
 
 .brand-side {
-  background: var(--jubari-dark);
+  //background: linear-gradient(to bottom, rgba(var(--jubari-dark-rgb), 0.9), rgba(var(--jubari-dark-rgb), 0.7));
+  background-size: cover;
+  background-position: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  color: var(--jubari-white);
+  padding: 3rem 2rem;
+  color: --jubari-dark; // Explicitly set text color for light theme
+  text-align: center;
+  overflow: hidden; // Prevent animations from showing outside bounds initially
 
   .brand-title {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 2rem;
-    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    letter-spacing: 1px;
+    color: var(--jubari-dark);  // Explicit color
+    animation: slideInFromLeft 0.8s 0.2s ease-out forwards;
+    opacity: 0; // Start hidden for animation
   }
 
   .logo {
-    width: 200px;
+    width: 180px;
     height: auto;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    animation: subtleFloat 3s ease-in-out infinite alternate, fadeInLogo 1s 0.1s ease-out forwards;
+    opacity: 0; // Start hidden for animation
   }
-}
 
-.logo-container {
-  text-align: center;
-  margin-bottom: 2rem;
-  margin-top: 15px;
-}
+  .brand-subtitle {
+    font-size: 1.1rem;
+    font-weight: 300;
+    opacity: 0.7; // Adjust opacity for dark text on light background
+    margin-top: 0.5rem; // Add some space below logo
+    color: var(--jubari-dark); // Explicit color (adjust opacity if needed)
+    animation: slideInFromLeft 0.8s 0.4s ease-out forwards;
+    opacity: 0; // Start hidden for animation
+  }
 
-.logo-container img {
-  width: 150px;
-  height: auto;
-}
-
-.logo-container .logo {
-  width: 120px;
-  height: auto;
+  .rh-solutions-text {
+    margin-top: auto; // Push to the bottom
+    padding-bottom: 2rem; // Space from bottom edge
+    font-size: 0.9rem;
+    font-weight: 400;
+    opacity: 0.6; // Adjust opacity for dark text on light background
+    letter-spacing: 0.5px;
+    color: var(--jubari-dark); // Explicit color (adjust opacity if needed)
+    animation: slideInFromLeft 0.8s 0.6s ease-out forwards;
+    opacity: 0; // Start hidden for animation
+  }
 }
 
 .login-container {
-  background: var(--jubari-white);
-  padding: 2rem;
+  background: var(--jubari-white); // Ensure login container is white
+  padding: 3rem 2.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  animation: fadeIn 0.5s ease-out;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.6s ease-out forwards;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
 
   h1 {
-    color: var(--jubari-dark);
-    font-size: 2rem;
-    margin-bottom: 1rem;
+    color: var(--jubari-dark); // Explicit color
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-align: left;
   }
 
   .subtitle {
-    color: var(--jubari-primary);
-    margin-bottom: 2rem;
+    color: var(--jubari-dark);  // Explicit color
+    margin-bottom: 2.5rem;
+    font-size: 1rem;
+    text-align: left;
   }
-}
-
-h1 {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
-  text-align: center;
-}
-
-.subtitle {
-  color: #666;
-  text-align: center;
-  margin-bottom: 2rem;
-  font-size: 14px;
 }
 
 .login-form {
+  width: 100%;
+
   .input-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.8rem; // Increased spacing between inputs
+    position: relative;
 
     ion-item {
-      --background: var(--jubari-white);
+      --background: transparent;
+      // Remove side/top borders, keep bottom
+      --border-width: 0 0 1px 0; 
       --border-color: var(--jubari-light);
-      --border-radius: 8px;
-      --border-width: 1px;
-      --border-style: solid;
-      margin-bottom: 1rem;
+      --highlight-color-focused: var(--jubari-primary); 
+      --padding-start: 42px; // Increased padding for icon
+      --inner-padding-end: 2px; // Minimal end padding
+      --border-radius: 0; // No border radius
+      --min-height: 50px; // Ensure consistent height
+      margin-bottom: 0.2rem; // Smaller margin below item
+      position: relative; // Ensure item is relative for icon positioning
+
+      .input-icon {
+        position: absolute;
+        left: 10px; 
+        top: calc(50% + 6px); // Initial position slightly lower
+        transform: translateY(-50%);
+        color: var(--jubari-dark); 
+        font-size: 1.1rem;
+        // Add transition for top and color
+        transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease; 
+        z-index: 1; 
+      }
+
+      ion-label {
+        color: var(--jubari-dark);  // Explicit label color
+        font-weight: 400; // Lighter label
+        font-size: 1rem; // Slightly larger label
+        margin-left: 42px; // Match increased padding
+        // Adjust floating label position if needed
+        transform-origin: left top;
+        transition: transform .3s cubic-bezier(0.4, 0, 0.2, 1), color .3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      ion-input {
+        --padding-start: 0; // Input starts after item padding
+        --padding-end: 40px; // Keep space for icon
+        font-size: 1rem;
+        color: var(--jubari-dark); // Explicit input text color
+        margin-top: 8px; // Add space above input text when label floats
+      }
+
+      // Remove box-shadow on focus, enhance bottom border instead
+      &.item-has-focus {
+        --border-color: var(--jubari-primary);
+        --border-width: 0 0 2px 0; // Thicker bottom border on focus
+        // Optional: Animate the border width/color change
+        transition: border-width 0.3s ease, border-color 0.3s ease;
+
+        .input-icon { // Change icon color on focus
+          color: var(--jubari-dark);
+        }
+      }
+
+      // Style for invalid state
+      &.ion-invalid.ion-touched {
+        --border-color: var(--ion-color-danger);
+        --border-width: 0 0 2px 0; // Use thicker border for error indication
+
+        .input-icon { // Change icon color on error
+          color: var(--ion-color-danger);
+          // Keep icon up if focused/valued and invalid
+          top: 20px; 
+        }
+      }
       
-      &::part(native) {
-        border: 1px solid var(--jubari-light);
-        padding: 8px 0;
+      // Ensure label color changes correctly on focus/invalid
+      &.item-has-focus ion-label {
+        --color: var(--jubari-primary);
+      }
+      &.ion-invalid.ion-touched ion-label {
+        --color: var(--ion-color-danger);
+      }
+
+      // Move icon up when label floats (focus or value)
+      &.item-has-focus .input-icon,
+      &.item-has-value .input-icon {
+         top: 20px; // Adjust this value for best alignment when floated
       }
     }
-
-    ion-label {
-      --color: var(--jubari-dark);
+    // Add styles for error messages if you implement them
+    .error-message {
+      color: var(--ion-color-danger);
+      font-size: 0.8rem;
+      padding-left: 2px;
+      min-height: 1em; // Reserve space even when empty
     }
   }
+}
 
-  ion-item {
-    --background: #f8f9fa;
-    --border-radius: 8px;
-    --padding-start: 16px;
-    --padding-end: 16px;
-    margin-bottom: 1rem;
-    
-    &::part(native) {
-      padding: 8px 0;
+.forgot-password-link {
+  display: block; // Make it a block element
+  text-align: right; // Align to the right
+  margin-top: -0.8rem; // Pull it up slightly closer to password input
+  margin-bottom: 1.5rem; // Space before login button
+  font-size: 0.9rem;
+  
+  ion-button {
+    --color: var(--jubari-dark); // Explicit button text color
+    --padding-start: 0; // Remove default button padding
+    --padding-end: 0;
+    font-weight: 500;
+    text-transform: none;
+    font-size: inherit; // Inherit font size
+
+    &:hover {
+      --color: var(--jubari-primary); // Change color on hover
     }
-  }
-
-  ion-label {
-    --color: #666;
-  }
-
-  ion-input {
-    --padding-start: 8px;
-    font-size: 16px;
   }
 }
 
 .password-toggle {
-  font-size: 1.2rem;
-  color: #666;
+  position: absolute;
+  right: 10px;
+  top: calc(50% + 4px); // Align vertically similar to input icon adjustment
+  transform: translateY(-50%);
+  font-size: 1.3rem;
+  color: var(--jubari-medium); // Explicit icon color
   cursor: pointer;
   padding: 8px;
+  z-index: 2;
 }
 
 .login-button {
-  --background: var(--jubari-primary);
-  --color: var(--jubari-white);
-  --border-radius: 8px;
-  --box-shadow: none;
-  margin-top: 1rem;
-  height: 48px;
-  font-weight: 500;
-  font-size: 16px;
-  
+  background: linear-gradient(to right, var(--jubari-primary), var(--jubari-secondary));
+  color: var(--jubari-medium); 
+  --border-radius: 25px;
+  --box-shadow: 0 4px 10px rgba(var(--jubari-primary-rgb), 0.3);
+  margin-top: 2rem;
+  height: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+
   &:hover {
-    --background: var(--jubari-dark);
+   // --background: linear-gradient(to right, var(--jubari-dark-shade), var(--jubari-secondary-shade));
+    --box-shadow: 0 6px 12px rgba(var(--jubari-primary-rgb), 0.4);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+    --box-shadow: 0 2px 5px rgba(var(--jubari-primary-rgb), 0.3);
   }
 }
 
 .register-prompt {
-  margin-top: 1.5rem;
+  margin-top: 2.5rem; // More space above
   text-align: center;
+  border-top: 1px solid var(--jubari-light); // Add a separator line
+  padding-top: 1.5rem; // Space above text after line
   
   span {
-    color: var(--jubari-dark);
-    font-size: 14px;
+    color: var(--jubari-dark); // Explicit text color
+    font-size: 0.9rem;
+    display: block; // Make span take full width
+    margin-bottom: 0.5rem; // Space between span and button
   }
 
   .register-link {
-    --color: var(--jubari-primary);
-    font-weight: 500;
+    --color: var(--jubari-primary); // Explicit link color
+    font-weight: 600;
     text-transform: none;
-    font-size: 14px;
+    font-size: 1rem; // Slightly larger link text
+    margin-left: 0; // Remove left margin as it's centered now
+    
+    &:hover {
+      --color: var(--jubari-dark);
+      text-decoration: none; // Remove underline, rely on color change
+    }
   }
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateX(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
+  }
+}
+
+// Keyframes for subtle logo float
+@keyframes subtleFloat {
+  from { transform: translateY(0); }
+  to { transform: translateY(-6px); }
+}
+
+// Keyframes for logo fade-in
+@keyframes fadeInLogo {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+// Keyframes for text slide-in
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 992px) {
+  .brand-side {
+    padding: 2rem 1.5rem;
+    .brand-title {
+      font-size: 2.2rem;
+    }
+    .logo {
+      width: 150px;
+    }
+  }
+  .login-container {
+    padding: 2.5rem 2rem;
+    h1 {
+      font-size: 1.8rem;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+    }
   }
 }
 
 @media (max-width: 768px) {
   .login-wrapper {
     grid-template-columns: 1fr;
+    height: auto;
+    min-height: 100%;
   }
 
   .brand-side {
     display: none;
+  }
+
+  .login-container {
+    box-shadow: none;
+    padding: 2rem 1.5rem;
+    min-height: 100vh;
+    justify-content: center;
+
+    h1, .subtitle {
+      text-align: center;
+    }
   }
 }

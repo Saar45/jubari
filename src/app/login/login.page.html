@@ -1,50 +1,115 @@
-<!-- <ion-header>
-  <ion-toolbar>
-    <ion-title>Jubari Consortium</ion-title>
-  </ion-toolbar>
-</ion-header> -->
+<!-- Header removed for a cleaner full-page look -->
 
 <ion-content>
   <div class="login-wrapper">
+    <!-- Brand Side: Displays company logo and name, hidden on smaller screens -->
     <div class="brand-side">
+      <img src="../../assets/jubari.png" alt="Jubari Consortium Logo" class="logo">
       <h1 class="brand-title">Jubari Consortium</h1>
-      <img src="../../assets/jubari.png" alt="Logo" class="logo">
+      <p class="brand-subtitle">Plateforme Intégrée</p> 
+      <p class="rh-solutions-text">Solutions RH Modernes</p>
     </div>
     
+    <!-- Login Form Side -->
     <div class="login-container">
       <h1>Bienvenue</h1>
-      <p class="subtitle">Veuillez vous connecter pour continuer</p>
+      <p class="subtitle">Connectez-vous pour accéder à votre espace.</p>
       
-      <form [formGroup]="loginForm" class="login-form">
+      <!-- Login Form -->
+      <form [formGroup]="loginForm" class="login-form" (ngSubmit)="login()" novalidate>
+        <!-- Email Input -->
         <div class="input-group">
-          <ion-item lines="none" [class.ion-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+          <ion-item lines="none" 
+                    [class.ion-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
+                    [class.item-has-focus]="isEmailFocused"
+                    [class.item-has-value]="loginForm.get('email')?.value"  
+                    (ionFocus)="onEmailFocus()"
+                    (ionBlur)="onEmailBlur()"
+                    [class.item-interactive-disabled]="isLoading">
+            <ion-icon name="mail-outline" class="input-icon" aria-hidden="true"></ion-icon>
             <ion-label position="floating">Adresse e-mail</ion-label>
-            <ion-input formControlName="email" type="email"></ion-input>
+            <ion-input #emailInput 
+                       formControlName="email" 
+                       type="email" 
+                       inputmode="email" 
+                       required
+                       [disabled]="isLoading"
+                       aria-label="Adresse e-mail">
+            </ion-input>
           </ion-item>
+          <!-- Error Message Placeholder -->
+          <div class="error-message" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['required']">
+            L'adresse e-mail est requise.
+          </div>
+          <div class="error-message" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['email']">
+            Format d'e-mail invalide.
+          </div>
         </div>
 
+        <!-- Password Input -->
         <div class="input-group">
-          <ion-item lines="none" [class.ion-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+          <ion-item lines="none" 
+                    [class.ion-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+                    [class.item-has-focus]="isPasswordFocused"
+                    [class.item-has-value]="loginForm.get('password')?.value"
+                    [class.item-interactive-disabled]="isLoading">
+            <ion-icon name="lock-closed-outline" class="input-icon" aria-hidden="true"></ion-icon>
             <ion-label position="floating">Mot de passe</ion-label>
-            <ion-input formControlName="password" [type]="passwordType"></ion-input>
+            <ion-input #passwordInput 
+                       formControlName="password" 
+                       [type]="passwordType" 
+                       required
+                       [disabled]="isLoading"
+                       aria-label="Mot de passe"
+                       (ionFocus)="onPasswordFocus()"
+                       (ionBlur)="onPasswordBlur()">
+            </ion-input>
+            <!-- Password visibility toggle icon -->
             <ion-icon [name]="passwordType === 'password' ? 'eye-outline' : 'eye-off-outline'"
-                      (click)="togglePasswordVisibility()" 
-                      class="password-toggle">
+                      (click)="!isLoading && togglePasswordVisibility()" 
+                      class="password-toggle"
+                      [class.disabled]="isLoading"
+                      aria-label="Afficher/Masquer le mot de passe"
+                      role="button"
+                      style="color: var(--jubari-dark);">
             </ion-icon>
           </ion-item>
+           <!-- Error Message Placeholder -->
+           <div class="error-message" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['required']">
+             Le mot de passe est requis.
+           </div>
+           <div class="error-message" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['minlength']">
+             Le mot de passe doit faire au moins 6 caractères.
+           </div>
         </div>
 
+        <!-- Forgot Password Link -->
+        <div class="forgot-password-link">
+          <ion-button fill="clear" 
+                      size="small" 
+                      (click)="forgotPassword()"
+                      [disabled]="isLoading">
+            Mot de passe oublié ?
+          </ion-button>
+        </div>
+
+        <!-- Login Button -->
         <ion-button expand="block" 
+                    type="submit"
                     class="login-button" 
-                    (click)="login()"
-                    [disabled]="loginForm.invalid">
-          Se connecter
+                    [disabled]="loginForm.invalid || isLoading">
+          <ion-spinner *ngIf="isLoading" name="crescent" color="light"></ion-spinner>
+          <span *ngIf="!isLoading">Se connecter</span>
         </ion-button>
 
+        <!-- Registration Prompt -->
         <div class="register-prompt">
-          <span>Votre première visite ici ?</span>
-          <ion-button fill="clear" class="register-link" (click)="openRegisterModal()">
-            S'inscrire
+          <span style="color: var(--jubari-dark);">Pas de compte ?</span>
+          <ion-button fill="clear" 
+                      class="register-link" 
+                      (click)="!isLoading && openRegisterModal()"
+                      [disabled]="isLoading">
+            Créer un compte
           </ion-button>
         </div>
       </form>
