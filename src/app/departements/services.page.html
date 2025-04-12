@@ -1,27 +1,71 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Services</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="addService()">
-        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header 
+  [title]="'Services'" 
+  [showBackButton]="true"
+  [showLogoutButton]="true">
+</app-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item *ngFor="let service of services">
-      <ion-label>
-        <h2>{{service.nom}}</h2>
-        <p>{{service.description}}</p>
-        <p *ngIf="service.chef">Chef: {{service.chef.prenom}} {{service.chef.nom}}</p>
-      </ion-label>
-      <ion-button fill="clear" slot="end" (click)="editService(service)">
-        <ion-icon slot="icon-only" name="create-outline" color="primary"></ion-icon>
-      </ion-button>
-    </ion-item>
-  </ion-list>
+  <!-- Add button FAB (conditionally shown) -->
+  <ion-fab vertical="top" horizontal="end" slot="fixed" *ngIf="!isLoading && !error">
+    <ion-fab-button (click)="addService()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
-  <ion-spinner *ngIf="isLoading" class="loading-spinner"></ion-spinner>
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner></ion-spinner>
+    <p>Chargement des services...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error-container">
+    <ion-icon name="alert-circle" color="danger" size="large"></ion-icon>
+    <p>{{ error }}</p>
+    <ion-button fill="clear" (click)="retryLoadServices()">Réessayer</ion-button>
+  </div>
+
+  <!-- Content -->
+  <div class="main-content" *ngIf="!isLoading && !error">
+    <div class="services-grid" *ngIf="services.length > 0; else noServices">
+      <ion-card *ngFor="let service of services">
+        <ion-card-content>
+          <div class="service-header">
+            <h2>{{service.nom}}</h2>
+            <!-- Optional: Add an icon or badge -->
+          </div>
+          <div class="service-details">
+            <p>{{service.description || 'Aucune description'}}</p>
+            <p *ngIf="service.chef">
+              <ion-icon class="detail-icon"
+                         name="shield-checkmark" ></ion-icon>
+              Chef: {{service.chef.prenom}} {{service.chef.nom}}
+            </p>
+            <p *ngIf="!service.chef">
+              <ion-icon name="person-circle-outline" class="detail-icon"></ion-icon>
+              Chef: Non assigné
+            </p>
+          </div>
+          <div class="action-buttons">
+            <ion-button fill="clear" (click)="editService(service)">
+              <ion-icon slot="icon-only" name="create-outline" color="primary"></ion-icon>
+            </ion-button>
+            <!-- Add delete button if needed -->
+            <!-- 
+            <ion-button fill="clear" color="danger" (click)="deleteService(service)">
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button> 
+            -->
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <ng-template #noServices>
+      <div class="empty-state"> <!-- Use existing empty state -->
+        <ion-icon name="grid-outline" size="large"></ion-icon>
+        <p>Aucun service trouvé.</p>
+      </div>
+    </ng-template>
+  </div>
 </ion-content>

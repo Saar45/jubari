@@ -5,17 +5,19 @@ import { RouterModule } from '@angular/router';
 import { Service } from '../models/service.model';
 import { PromethiumService } from '../services/promethium.service';
 import { AddServiceModalComponent } from './components/add-service-modal/add-service-modal.component';
+import { AppHeaderComponent } from "../components/app-header/app-header.component";
 
 @Component({
   selector: 'app-services',
   templateUrl: './services.page.html',
   styleUrls: ['./services.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, RouterModule]
+  imports: [IonicModule, CommonModule, RouterModule, AppHeaderComponent]
 })
 export class ServicesPage implements OnInit {
   services: Service[] = [];
   isLoading = true;
+  error: string | null = null;
 
   constructor(
     private promethiumService: PromethiumService,
@@ -28,16 +30,23 @@ export class ServicesPage implements OnInit {
 
   loadServices() {
     this.isLoading = true;
+    this.error = null; 
     this.promethiumService.getServices().subscribe({
       next: (services) => {
         this.services = services;
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading services:', error);
+        console.error(error);
+        this.error = 'Impossible de charger les services.';
         this.isLoading = false;
       }
     });
+  }
+
+  // Add retry method
+  retryLoadServices() {
+    this.loadServices();
   }
 
   async addService() {
@@ -51,7 +60,7 @@ export class ServicesPage implements OnInit {
     await modal.present();
 
     const { data, role } = await modal.onWillDismiss();
-    if (role !== 'annuler') {
+    if (role === 'confirm' || (data && data.refresh)) { 
       this.loadServices();
     }
   }
@@ -67,8 +76,8 @@ export class ServicesPage implements OnInit {
 
     await modal.present();
 
-    const { role } = await modal.onWillDismiss();
-    if (role !== 'annuler') {
+    const { data, role } = await modal.onWillDismiss();
+    if (role === 'confirm' || (data && data.refresh)) {
       this.loadServices();
     }
   }

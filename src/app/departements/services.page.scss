@@ -1,59 +1,122 @@
+ion-content {
+  --background: #f5f7fa; // Match background of other pages
+}
+
+.main-content {
+  padding: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1rem;
-  padding: 1rem;
+  // Adjust grid columns as needed, e.g., 1 column on small, more on larger screens
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+  gap: 16px;
+  margin-top: 16px; // Add some space below the FAB
 }
 
 ion-card {
-  margin: 0;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
+  margin: 0; // Remove default card margin if grid provides gap
 
   &:hover {
     transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  ion-card-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
   }
 }
 
-.stats {
-  margin-top: 1rem;
-  display: flex;
-  gap: 1rem;
-  
-  .stat-item {
+.service-header {
+  margin-bottom: 12px;
+  h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--jubari-dark);
+  }
+}
+
+.service-details {
+  flex-grow: 1; // Allow details to take available space
+  p {
+    margin: 4px 0;
+    color: #666;
+    font-size: 0.9rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    
-    ion-icon {
-      font-size: 1.2rem;
+
+    .detail-icon {
+      margin-right: 6px;
+      font-size: 1.1em;
       color: var(--ion-color-medium);
     }
   }
 }
 
-ion-item {
-  --padding-start: 16px;
-  --padding-end: 8px;
-  margin: 8px;
-  border-radius: 8px;
-  
+.action-buttons {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end; // Align buttons to the right
+
   ion-button {
-    margin-right: 0;
-    --padding-end: 4px;
-    --padding-start: 4px;
-    
-    ion-icon {
-      font-size: 20px;
-    }
+    --padding-start: 6px;
+    --padding-end: 6px;
   }
 }
 
-.loading-spinner {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.loading-container,
+.error-container,
+.empty-state {
   display: flex;
-  margin: 20px auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 16px;
+  height: calc(100% - 60px); // Adjust based on header height
+  color: var(--ion-color-medium);
+
+  ion-spinner {
+    margin-bottom: 16px;
+  }
+
+  ion-icon {
+    font-size: 4rem;
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+}
+
+.error-container {
+  ion-button {
+    margin-top: 16px;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  margin-top: 40px;
+  color: var(--ion-color-medium);
+
+  ion-icon {
+    font-size: 4rem;
+    margin-bottom: 16px;
+  }
+}
+
+// Ensure FAB doesn't overlap content too much initially
+ion-fab {
+  margin-top: 8px; // Adjust as needed
 }
