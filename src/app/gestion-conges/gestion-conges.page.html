@@ -1,16 +1,25 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
-    </ion-buttons>
-    <ion-title>
-      Gestion des congés {{ currentUser ? (isHR(currentUser) ? '- RH' : '- ' + currentUser.serviceDirige?.nom) : '' }}
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header 
+  [title]="'Gérer les demandes'" 
+  [showBackButton]="true"
+  [showLogoutButton]="true">
+</app-header>
 
 <ion-content>
-  <div class="leave-management" *ngIf="currentUser?.serviceDirige || (currentUser && isHR(currentUser))">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner></ion-spinner>
+    <p>Chargement des demandes...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error-container">
+    <ion-icon name="alert-circle" color="danger" size="large"></ion-icon>
+    <p>{{ error }}</p>
+    <ion-button fill="clear" (click)="retryLoadData()">Réessayer</ion-button>
+  </div>
+
+  <!-- Content (only shown if user has permission and no loading/error) -->
+  <div class="leave-management" *ngIf="!isLoading && !error && (currentUser?.serviceDirige || (currentUser && isHR(currentUser)))">
     <div class="filters-section">
       <ion-searchbar 
         [(ngModel)]="searchTerm" 
@@ -19,8 +28,8 @@
       </ion-searchbar>
 
       <ion-segment [(ngModel)]="sortOrder" (ionChange)="sortLeaveRequests()">
-        <ion-segment-button value="none">
-          <ion-label>Sans tri</ion-label>
+        <ion-segment-button value="priority">
+          <ion-label>Prioritaire</ion-label>
         </ion-segment-button>
         <ion-segment-button value="asc">
           <ion-label>Croissant</ion-label>
@@ -31,7 +40,7 @@
       </ion-segment>
     </div>
 
-    <div class="requests-grid">
+    <div class="requests-grid" *ngIf="filteredLeaveRequests.length > 0; else noRequests">
       <ion-card *ngFor="let leave of filteredLeaveRequests">
         <ion-card-content>
           <div class="request-header">
@@ -47,7 +56,7 @@
               </div>
             </div>
             <ion-chip
-              [color]="leave.historiqueConge.etat === 'En attente' ? 'warning' : 'medium'"
+              [color]="leave.historiqueConge.etat === 'En attente' ? 'warning' : 'danger'"
             >
               <ion-icon
                 name="time-outline"
@@ -128,5 +137,20 @@
         </ion-card-content>
       </ion-card>
     </div>
+
+    <!-- Empty state for when filters result in no matches or no initial data -->
+    <ng-template #noRequests>
+        <div class="empty-state">
+          <ion-icon name="file-tray-outline" size="large"></ion-icon>
+          <p>Aucune demande de congé à afficher.</p>
+        </div>
+    </ng-template>
   </div>
+
+  <!-- Optional: Message if user lands here but has no permission (though redirect is primary) -->
+  <div *ngIf="!isLoading && !error && !(currentUser?.serviceDirige || (currentUser && isHR(currentUser)))" class="error-container">
+      <ion-icon name="lock-closed-outline" color="warning" size="large"></ion-icon>
+      <p>Accès non autorisé.</p>
+  </div>
+
 </ion-content>
