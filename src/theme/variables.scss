@@ -1,2 +1,39 @@
-// For information on how to create your own theme, please see:
-// http://ionicframework.com/docs/theming/
+/* Custom Jubari variables */
+:root {
+  --jubari-white: #F9F7F7;
+  --jubari-light: #DBE2EF;
+  --jubari-primary: #3F72AF;
+  --jubari-dark: #112D4E;
+  
+  /* Set global font family */
+  --ion-font-family: 'Montserrat', sans-serif;
+
+  /* Ionic Variables overrides to match Jubari theme */
+  --ion-background-color: var(--jubari-white);
+  --ion-text-color: var(--jubari-dark);
+  --ion-toolbar-background: var(--jubari-white);
+  --ion-color-primary: var(--jubari-primary);
+  --ion-color-primary-contrast: var(--jubari-white);
+  --ion-color-secondary: var(--jubari-dark);
+  --ion-color-secondary-contrast: var(--jubari-white);
+  --ion-item-background: var(--jubari-white);
+}
+
+/* Apply theme background and font to body */
+body {
+  background-color: var(--jubari-white);
+  font-family: var(--ion-font-family); // Ensure body uses the font
+}
+
+/* Ionic Dark Theme Override - Force Light Theme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-background-color: var(--jubari-white);
+    --ion-background-color-rgb: 249, 247, 247;
+    --ion-text-color: var(--jubari-dark);
+    --ion-text-color-rgb: 17, 45, 78;
+    --ion-toolbar-background: var(--jubari-white);
+    --ion-card-background: var(--jubari-white);
+    --ion-item-background: var(--jubari-white);
+  }
+}
