@@ -1,54 +1,127 @@
 ion-content {
-  --background: #f5f7fa;
+  --background: #f5f7fa; // Match background of other pages
 }
 
-ion-list {
-  background: transparent;
+.main-content {
   padding: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-ion-item {
-  --background: white;
-  margin-bottom: 8px;
-  border-radius: 8px;
-  --border-radius: 8px;
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --padding-top: 12px;
-  --padding-bottom: 12px;
+.conges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+  gap: 16px;
+}
 
-  .employee-header {
+ion-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
+  margin: 0; // Remove default card margin
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  ion-card-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.conge-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--ion-color-step-150, rgba(0, 0, 0, 0.08));
+  padding-bottom: 12px;
+
+  ion-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .employee-info {
+    flex-grow: 1;
+    h2 {
+      margin: 0 0 2px 0;
+      font-weight: 600;
+      font-size: 1rem; // Adjusted size
+      color: var(--jubari-dark);
+    }
+    p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--ion-color-medium);
+    }
+  }
+
+  .status-icon {
+    color: var(--ion-color-success); // Use success color for 'on leave'
+    font-size: 1.5rem; // Slightly larger icon
+  }
+}
+
+.conge-details {
+  .detail-item {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 8px;
-
-    h2 {
-      margin: 0;
-      font-weight: 600;
-      font-size: 16px;
-      color: var(--ion-color-primary);
-    }
+    color: var(--ion-color-medium-shade);
+    font-size: 0.9rem;
+    margin-bottom: 6px;
 
     ion-icon {
-      color: var(--ion-color-warning);
-      font-size: 20px;
+      font-size: 1.1rem;
+      color: var(--ion-color-medium);
+    }
+
+    &.description {
+      align-items: flex-start; // Align icon top for multi-line text
+      ion-icon {
+        margin-top: 2px;
+      }
+      span {
+        color: var(--jubari-dark); // Make description text darker
+      }
     }
   }
+}
 
-  h2 {
-    font-weight: 600;
-    font-size: 16px;
-    margin-bottom: 8px;
+// Centered Loading/Error/Empty States
+.loading-container,
+.error-container,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 16px;
+  height: calc(100% - 60px); // Adjust based on header height if needed
+  color: var(--ion-color-medium);
+
+  ion-spinner {
+    margin-bottom: 16px;
+  }
+
+  ion-icon {
+    font-size: 4rem;
+    margin-bottom: 16px;
   }
 
   p {
-    color: var(--ion-color-medium);
-    font-size: 14px;
-    margin: 4px 0;
+    font-size: 1rem;
   }
+}
 
-  ion-badge {
-    margin-top: 8px;
+.error-container {
+  ion-button {
+    margin-top: 16px;
   }
 }

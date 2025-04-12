@@ -3,13 +3,14 @@ import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { VibraniumService } from '../../services/vibranium.service';
 import { Conge } from '../../models/conge.model';
+import { AppHeaderComponent } from "../../components/app-header/app-header.component";
 
 @Component({
   selector: 'app-conges-en-cours',
   templateUrl: './conges-en-cours.page.html',
   styleUrls: ['./conges-en-cours.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule]
+  imports: [IonicModule, CommonModule, AppHeaderComponent]
 })
 export class CongesEnCoursPage implements OnInit {
   conges: Conge[] = [];
@@ -22,7 +23,7 @@ export class CongesEnCoursPage implements OnInit {
     this.loadConges();
   }
 
-  private loadConges() {
+  public loadConges() {
     this.isLoading = true;
     this.vibraniumService.getCurrentConges().subscribe({
       next: (conges) => {

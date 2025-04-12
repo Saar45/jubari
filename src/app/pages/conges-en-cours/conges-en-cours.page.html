@@ -1,47 +1,58 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Congés en cours</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header 
+  [title]="'Tous les congés en cours'" 
+  [showBackButton]="true"
+  [showLogoutButton]="true">
+</app-header>
 
 <ion-content>
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div *ngIf="isLoading" class="ion-padding ion-text-center">
+  <div *ngIf="isLoading" class="loading-container"> <!-- Updated loading container -->
     <ion-spinner></ion-spinner>
     <p>Chargement des congés...</p>
   </div>
 
-  <div *ngIf="error" class="ion-padding ion-text-center">
+  <div *ngIf="error" class="error-container"> <!-- Updated error container -->
     <ion-icon name="alert-circle" color="danger" size="large"></ion-icon>
     <p>{{ error }}</p>
+    <ion-button fill="clear" (click)="loadConges()">Réessayer</ion-button>
   </div>
 
-  <ion-list *ngIf="!isLoading && !error">
-    <ion-item-group *ngIf="conges.length > 0; else noConges">
-      <ion-item *ngFor="let conge of conges">
-        <ion-label>
-          <div class="employee-header">
-            <h2>{{ conge.employe.prenom }} {{ conge.employe.nom }}</h2>
-            <ion-icon name="airplane-outline" title="En congé"></ion-icon>
+  <div class="main-content" *ngIf="!isLoading && !error">
+    <div class="conges-grid" *ngIf="conges.length > 0; else noConges">
+      <ion-card *ngFor="let conge of conges">
+        <ion-card-content>
+          <div class="conge-header">
+            <ion-avatar>
+              <img src="https://ionicframework.com/docs/img/demos/avatar.svg" /> <!-- Placeholder avatar -->
+            </ion-avatar>
+            <div class="employee-info">
+              <h2>{{ conge.employe.prenom }} {{ conge.employe.nom }}</h2>
+              <p>{{ conge.employe.service?.nom || 'Service non défini' }}</p>
+            </div>
+            <ion-icon name="airplane-outline" class="status-icon" title="En congé"></ion-icon>
           </div>
-          <p>{{ conge.dateDebut | date:'dd/MM/yyyy' }} - {{ conge.dateFin | date:'dd/MM/yyyy' }}</p>
-          <p>{{ conge.description }}</p>
-          <ion-badge color="primary">{{ conge.employe.service?.nom }}</ion-badge>
-        </ion-label>
-      </ion-item>
-    </ion-item-group>
+          <div class="conge-details">
+            <div class="detail-item">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span>{{ conge.dateDebut | date:'dd/MM/yyyy' }} - {{ conge.dateFin | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="detail-item description">
+              <ion-icon name="document-text-outline"></ion-icon>
+              <span>{{ conge.description || 'Aucune description' }}</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
     
     <ng-template #noConges>
-      <div class="ion-padding ion-text-center">
-        <ion-icon name="calendar-outline" size="large" color="medium"></ion-icon>
-        <p>Aucun congé en cours</p>
+      <div class="empty-state"> <!-- Updated empty state -->
+        <ion-icon name="calendar-outline" size="large" color="var(--jubari-dark)"></ion-icon>
+        <p>Aucun employé en congé actuellement.</p>
       </div>
     </ng-template>
-  </ion-list>
+  </div>
 </ion-content>
