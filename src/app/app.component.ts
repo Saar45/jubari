@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { AuthService } from './services/auth.service';
@@ -42,7 +42,7 @@ import {
   standalone: true,
   imports: [IonApp, IonRouterOutlet]
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent {
   constructor(
     private authService: AuthService
   ) {
@@ -52,13 +52,5 @@ export class AppComponent implements OnInit, OnDestroy {
       checkmarkCircleOutline, chatbubblesOutline, documentTextOutline,
       createOutline, trashOutline, addOutline, closeCircleOutline, informationCircleOutline, sunnyOutline, medicalOutline, warningOutline, calendarNumberOutline, shieldCheckmark, personOutline, mailOutline, homeOutline, locationOutline, businessOutline, briefcaseOutline, person, create, mail, closeOutline, close, checkmarkCircle, constructOutline, alertCircle, funnelOutline, airplaneOutline, calendarClearOutline, mapOutline, lockClosedOutline, sendOutline
     });
-  }
-
-  ngOnInit() {
-    // AuthService will handle activity monitoring automatically
-  }
-
-  ngOnDestroy() {
-    // AuthService will handle cleanup in its own ngOnDestroy
   }
 }

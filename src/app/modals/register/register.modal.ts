@@ -359,7 +359,7 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule],
 })
-export class RegisterModal {
+export class RegisterComponent {
   registerForm: FormGroup;
   passwordType: string = 'password';
   isLoading: boolean = false;
