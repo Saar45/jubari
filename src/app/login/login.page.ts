@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule, ModalController, AlertController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
-import { RegisterModal } from '../modals/register/register.modal';
+import { RegisterComponent } from '../modals/register/register.modal';
 
 @Component({
   selector: 'app-login',
@@ -90,7 +90,7 @@ export class LoginPage {
 
   async openRegisterModal(): Promise<void> {
     const modal = await this.modalCtrl.create({
-      component: RegisterModal
+      component: RegisterComponent
     });
     await modal.present();
     

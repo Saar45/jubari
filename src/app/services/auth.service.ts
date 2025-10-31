@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, timer, Subscription, fromEvent } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -24,7 +24,7 @@ export interface RegisterRequest {
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   private readonly API_URL = environment.apiUrl;
   private readonly INACTIVITY_TIMEOUT = 10 * 60 * 1000; // 10 minutes in milliseconds
   private activityCheckTimer?: Subscription;
